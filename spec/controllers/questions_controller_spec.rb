@@ -29,8 +29,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe '#POST create' do
+    subject { post :create, params: { question: question_params } }
+
     context 'with valid attributes' do
-      subject { post :create, params: { question: attributes_for(:question) } }
+      let(:question_params) { attributes_for(:question) }
 
       it { expect { subject }.to change(Question, :count).by(1) }
       it do
@@ -41,7 +43,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       context 'when title empty' do
-        subject { post :create, params: { question: attributes_for(:question, :empty_title) } }
+        let(:question_params) { attributes_for(:question, :empty_title) }
 
         it { expect { subject }.to_not change(Question, :count) }
         it do
@@ -51,7 +53,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       context 'when body empty' do
-        subject { post :create, params: { question: attributes_for(:question, :empty_body) } }
+        let(:question_params) { attributes_for(:question, :empty_body) }
 
         it { expect { subject }.to_not change(Question, :count) }
         it do

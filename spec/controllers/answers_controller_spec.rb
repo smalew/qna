@@ -31,8 +31,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe '#POST create' do
+    subject { post :create, params: { question_id: question, answer: answer_params } }
+
     context 'with valid attributes' do
-      subject { post :create, params: { question_id: question, answer: attributes_for(:answer) } }
+      let(:answer_params) { attributes_for(:answer) }
 
       it { expect { subject }.to change(Answer, :count).by(1) }
       it do
@@ -43,7 +45,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       context 'when body empty' do
-        subject { post :create, params: { question_id: question, answer: attributes_for(:answer, :empty_body) } }
+        let(:answer_params) { attributes_for(:answer, :empty_body) }
 
         it { expect { subject }.to_not change(Answer, :count) }
         it do
@@ -66,7 +68,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       context 'when body empty' do
-        let(:answer_params) { { body: '' } }
+        let(:answer_params) { attributes_for(:answer, :empty_body)  }
 
         it { expect(response).to render_template(:edit) }
         it { expect(answer.reload.body).to eq('My body') }
