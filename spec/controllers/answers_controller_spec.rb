@@ -37,6 +37,7 @@ RSpec.describe AnswersController, type: :controller do
       let(:answer_params) { attributes_for(:answer) }
 
       it { expect { subject }.to change(Answer, :count).by(1) }
+      it { expect { subject }.to change(question.answers, :count).by(1) }
       it do
         subject
         expect(response).to redirect_to(question_answer_path(question, Answer.last))
