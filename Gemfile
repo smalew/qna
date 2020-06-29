@@ -13,6 +13,7 @@ gem 'jbuilder', '~> 2.7'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'slim-rails', '3.2.0'
+gem 'devise', '4.7.2'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -35,6 +36,7 @@ group :test do
   gem 'webdrivers'
   gem 'shoulda-matchers', '~> 4.0'
   gem 'rails-controller-testing', '1.0.5'
+  gem 'launchy', '2.5.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

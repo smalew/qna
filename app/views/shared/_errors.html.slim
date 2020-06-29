@@ -1,0 +1,5 @@
+= if recource&.errors.present?
+  b= "#{recource.errors.count} error(s) detected: "
+  ul
+    - recource.errors.full_messages.each do |message|
+      li= message
