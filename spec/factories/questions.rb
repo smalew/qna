@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :question do
-    title { "My title" }
-    body { "My body" }
+    sequence(:title) { |n| "Question title #{n}" }
+    sequence(:body) { |n| "Question body #{n}" }
 
     trait :empty_title do
       title { '' }

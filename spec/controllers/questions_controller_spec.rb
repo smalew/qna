@@ -83,8 +83,8 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with invalid attributes' do
       shared_examples 'invalid result' do
         it { expect(response).to render_template(:edit) }
-        it { expect(question.reload.title).to eq('My title') }
-        it { expect(question.reload.body).to eq('My body') }
+        it { expect(question.reload.title).to eq(question.title) }
+        it { expect(question.reload.body).to eq(question.body) }
       end
 
       context 'when title empty' do

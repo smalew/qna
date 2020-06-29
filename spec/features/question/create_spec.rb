@@ -14,13 +14,35 @@ feature 'User can create question', %q{
       visit questions_path
       click_on I18n.t('question.new_button')
 
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'text text text'
+      fill_in 'Title', with: 'Title question'
+      fill_in 'Body', with: 'Body question'
       click_on I18n.t('question.form.create_button')
 
       expect(page).to have_content(I18n.t('question.successful_create'))
-      expect(page).to have_content('Test question')
-      expect(page).to have_content('text text text')
+      expect(page).to have_content('Title question')
+      expect(page).to have_content('Body question')
+    end
+
+    scenario 'ask question with empty title' do
+      visit questions_path
+      click_on I18n.t('question.new_button')
+
+      fill_in 'Title', with: ''
+      fill_in 'Body', with: 'Body question'
+      click_on I18n.t('question.form.create_button')
+
+      expect(page).to have_content("Title can't be blank")
+    end
+
+    scenario 'ask question with empty body' do
+      visit questions_path
+      click_on I18n.t('question.new_button')
+
+      fill_in 'Title', with: 'Title question'
+      fill_in 'Body', with: ''
+      click_on I18n.t('question.form.create_button')
+
+      expect(page).to have_content("Body can't be blank")
     end
   end
 

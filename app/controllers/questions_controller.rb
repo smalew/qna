@@ -48,6 +48,16 @@ class QuestionsController < ApplicationController
   end
   helper_method :question
 
+  def answers
+    @answers ||= question.answers
+  end
+  helper_method :answers
+
+  def answer
+    @answer ||= question.answers.build
+  end
+  helper_method :answer
+
   def question_params
     params.require(:question).permit(:title, :body)
   end

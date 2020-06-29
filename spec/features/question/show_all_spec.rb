@@ -1,35 +1,36 @@
 require 'rails_helper'
 
-feature 'User can create question', %q{
-  In order to get answer from community
+feature 'User can see all questions', %q{
+  In order to see questions from community
   As a authenticated user
-  I'd like to ba able to ask the question
+  I'd like to ba able to see all questions
 } do
+  given!(:questions) { create_list(:question, 5) }
+
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
     background { sign_in(user) }
 
-    scenario 'ask question' do
+    scenario 'can see questions' do
       visit questions_path
-      click_on I18n.t('question.new_button')
 
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'text text text'
-      click_on I18n.t('question.form.create_button')
-
-      expect(page).to have_content(I18n.t('question.successful_create'))
-      expect(page).to have_content('Test question')
-      expect(page).to have_content('text text text')
+      expect(page).to have_content(I18n.t('question.header'))
+      questions.each do |question|
+        expect(page).to have_content(question.title)
+        expect(page).to have_content(question.body)
+      end
     end
   end
 
   describe 'Unauthenticated user' do
-    scenario 'ask question' do
+    scenario 'can see questions' do
       visit questions_path
-      click_on I18n.t('question.new_button')
-
-      expect(page).to have_content(I18n.t('devise.failure.unauthenticated'))
+      expect(page).to have_content(I18n.t('question.header'))
+      questions.each do |question|
+        expect(page).to have_content(question.title)
+        expect(page).to have_content(question.body)
+      end
     end
   end
 end
