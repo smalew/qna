@@ -33,11 +33,17 @@ en:
   question:
     header: Questions
     successful_create: Your question successfully created.
+    successful_destroy: Your question successfully deleted.
+    failure_destroy: Your can not delete question.
     new_button: Ask question
+    destroy_button: Delete question
     form:
       create_button: Ask
   answer:
     header: Answers
     successful_create: Your answer successfully created.
+    successful_destroy: Your answer successfully deleted.
+    failure_destroy: Your can not delete answer.
+    destroy_button: Delete answer
     form:
       create_button: Answer

@@ -15,6 +15,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
+    question.user = current_user
     if question.save
       redirect_to question, notice: I18n.t('question.successful_create')
     else
@@ -31,9 +32,11 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
-
-    redirect_to questions_path
+    if question.user_owner?(current_user) && question.destroy
+      redirect_to questions_path, notice: I18n.t('question.successful_destroy')
+    else
+      redirect_to questions_path, alert: I18n.t('question.failure_destroy')
+    end
   end
 
   private
