@@ -9,9 +9,10 @@ feature 'User can sign in', %q{
 
   describe 'Registered user' do
     scenario 'tries to sign in' do
-      sign_in(create(:user))
+      manual_login(create(:user))
 
       expect(page).to have_content(I18n.t('devise.sessions.signed_in'))
+      expect(page).to_not have_content('Login')
     end
   end
 
@@ -24,6 +25,8 @@ feature 'User can sign in', %q{
       click_on 'Log in'
 
       expect(page).to have_content(I18n.t('devise.failure.invalid', authentication_keys: 'Email'))
+      expect(page).to have_content('Login')
+      expect(page).to_not have_content('Log out')
     end
 
     scenario 'tries to sign in without email' do
@@ -32,6 +35,8 @@ feature 'User can sign in', %q{
       click_on 'Log in'
 
       expect(page).to have_content(I18n.t('devise.failure.invalid', authentication_keys: 'Email'))
+      expect(page).to have_content('Login')
+      expect(page).to_not have_content('Log out')
     end
   end
 end
