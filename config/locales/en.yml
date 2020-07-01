@@ -30,4 +30,8 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  question:
+    successful_create: Your question successfully created.
+    new_button: Ask question
+    form:
+      create_button: Ask
