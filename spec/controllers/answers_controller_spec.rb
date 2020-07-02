@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
 
@@ -21,6 +22,10 @@ RSpec.describe AnswersController, type: :controller do
 
       it { expect { subject }.to change(Answer, :count).by(1) }
       it { expect { subject }.to change(question.answers, :count).by(1) }
+      it do
+        subject
+        expect(assigns(:answer).user).to eq(user)
+      end
       it do
         subject
         expect(response).to redirect_to(question_path(question))
@@ -63,15 +68,30 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe '#DELETE destroy' do
-    let!(:question) { create(:question) }
-    let!(:answer) { create(:answer, question: question) }
+    context 'user is answer owner' do
+      let!(:question) { create(:question) }
+      let!(:answer) { create(:answer, question: question, user: user) }
 
-    subject { delete :destroy, params: { question_id: question, id: answer } }
+      subject { delete :destroy, params: { question_id: question, id: answer } }
 
-    it { expect { subject }.to change(Answer, :count).by(-1) }
-    it do
-      subject
-      expect(response).to redirect_to(question_answers_path(question))
+      it { expect { subject }.to change(Answer, :count).by(-1) }
+      it do
+        subject
+        expect(response).to redirect_to(question_path(question))
+      end
+    end
+
+    context 'user is not answer owner' do
+      let!(:question) { create(:question) }
+      let!(:answer) { create(:answer, question: question, user: another_user) }
+
+      subject { delete :destroy, params: { question_id: question, id: answer } }
+
+      it { expect { subject }.to_not change(Answer, :count) }
+      it do
+        subject
+        expect(response).to redirect_to(question_path(question))
+      end
     end
   end
 end

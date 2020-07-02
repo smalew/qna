@@ -5,25 +5,28 @@ class AnswersController < ApplicationController
   end
 
   def create
+    answer.user = current_user
     if answer.save
-      redirect_to question_path(question), notice: I18n.t('answer.successful_create')
+      redirect_to question_path(answer.question), notice: I18n.t('answer.successful_create')
     else
-      render 'questions/show', locals: { model: [question, answer] }
+      render 'questions/show', locals: { model: [answer.question, answer] }
     end
   end
 
   def update
     if answer.update(answer_params)
-      redirect_to question_path(question)
+      redirect_to question_path(answer.question)
     else
       render :edit
     end
   end
 
   def destroy
-    answer.destroy
-
-    redirect_to question_answers_path(question)
+    if current_user.author_of?(answer) && answer.destroy
+      redirect_to question_path(answer.question), notice: I18n.t('answer.successful_destroy')
+    else
+      redirect_to question_path(answer.question), alert: I18n.t('answer.failure_destroy')
+    end
   end
 
   private
@@ -39,7 +42,7 @@ class AnswersController < ApplicationController
   helper_method :answers
 
   def answer
-    @answer ||= params[:id].present? ? answers.find(params[:id]) : answers.build(answer_params)
+    @answer ||= params[:id].present? ? Answer.find(params[:id]) : answers.build(answer_params)
   end
   helper_method :answer
 
