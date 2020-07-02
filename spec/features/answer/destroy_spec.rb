@@ -22,6 +22,7 @@ feature 'User can destroy answer', %q{
           click_on I18n.t('answer.destroy_button')
 
           expect(page).to have_content(I18n.t('answer.successful_destroy'))
+          expect(page).to_not have_content(answer.body)
         end
       end
 

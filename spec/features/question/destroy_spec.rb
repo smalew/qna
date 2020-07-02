@@ -19,6 +19,8 @@ feature 'User can destroy question', %q{
         click_on I18n.t('question.destroy_button')
 
         expect(page).to have_content(I18n.t('question.successful_destroy'))
+        expect(page).to_not have_content(question.title)
+        expect(page).to_not have_content(question.body)
       end
     end
 
