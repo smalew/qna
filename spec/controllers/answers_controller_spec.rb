@@ -41,29 +41,23 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe '#PATCH update' do
-    subject { patch :update, params: { question_id: question, id: answer, answer: answer_params } }
+    before { patch :update, params: { question_id: question, id: answer, answer: answer_params } }
 
     context 'with valid attributes' do
       let(:answer_params) { { body: 'new_body' } }
 
-      it do
-        subject
-        expect(response).to redirect_to(question_path(question))
-        expect(assigns(:answer)).to eq(answer)
-        expect(answer.reload.body).to eq('new_body')
-      end
+      it { expect(response).to redirect_to(question_path(question)) }
+      it { expect(assigns(:answer)).to eq(answer) }
+      it { expect(answer.reload.body).to eq('new_body') }
     end
 
     context 'with invalid attributes' do
       context 'when body empty' do
         let(:answer_params) { attributes_for(:answer, :empty_body) }
 
-        it do
-          subject
-          expect(response).to render_template(:edit)
-          expect(assigns(:answer)).to eq(answer)
-          expect(answer.reload.body).to eq(answer.body)
-        end
+        it { expect(response).to render_template(:edit) }
+        it { expect(assigns(:answer)).to eq(answer) }
+        it { expect(answer.reload.body).to eq(answer.body) }
       end
     end
   end
