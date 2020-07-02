@@ -3,13 +3,16 @@
 h1= question.title
 p= question.body
 
-= link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
+- if user_signed_in? && current_user.author_of?(question)
+  = link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
 
 h2= I18n.t('answer.header')
 
-- answers.select(&:persisted?).each do |answer|
+- answers.each do |answer|
+  - next unless answer.persisted?
   p= answer.body
-  = link_to I18n.t('answer.destroy_button'), question_answer_path(question, answer), method: :delete
+  - if user_signed_in? && current_user.author_of?(answer)
+    = link_to I18n.t('answer.destroy_button'), answer_path(answer), method: :delete
 
 = form_with model: [question, answer], local: true do |f|
   = f.label :body

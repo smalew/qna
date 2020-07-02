@@ -29,9 +29,7 @@ feature 'User can destroy question', %q{
       scenario 'failure destroy' do
         visit question_path(question)
 
-        click_on I18n.t('question.destroy_button')
-
-        expect(page).to have_content(I18n.t('question.failure_destroy'))
+        expect(page).to_not have_content(I18n.t('question.destroy_button'))
       end
     end
   end
@@ -43,9 +41,7 @@ feature 'User can destroy question', %q{
     scenario 'failure destroy' do
       visit question_path(question)
 
-      click_on I18n.t('question.destroy_button')
-
-      expect(page).to have_content(I18n.t('devise.failure.unauthenticated'))
+      expect(page).to_not have_content(I18n.t('question.destroy_button'))
     end
   end
 end

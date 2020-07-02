@@ -42,6 +42,10 @@ RSpec.describe QuestionsController, type: :controller do
       it { expect { subject }.to change(Question, :count).by(1) }
       it do
         subject
+        expect(assigns(:question).user).to eq(user)
+      end
+      it do
+        subject
         expect(response).to redirect_to(assigns(:question))
       end
     end

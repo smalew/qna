@@ -32,7 +32,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if question.user_owner?(current_user) && question.destroy
+    if current_user.author_of?(question) && question.destroy
       redirect_to questions_path, notice: I18n.t('question.successful_destroy')
     else
       redirect_to questions_path, alert: I18n.t('question.failure_destroy')
