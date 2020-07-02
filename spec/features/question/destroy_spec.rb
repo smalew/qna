@@ -31,7 +31,7 @@ feature 'User can destroy question', %q{
       scenario 'failure destroy' do
         visit question_path(question)
 
-        expect(page).to_not have_content(I18n.t('question.destroy_button'))
+        expect(page).to_not have_link(I18n.t('question.destroy_button'))
       end
     end
   end
@@ -43,7 +43,7 @@ feature 'User can destroy question', %q{
     scenario 'failure destroy' do
       visit question_path(question)
 
-      expect(page).to_not have_content(I18n.t('question.destroy_button'))
+      expect(page).to_not have_link(I18n.t('question.destroy_button'))
     end
   end
 end

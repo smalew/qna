@@ -93,7 +93,7 @@ RSpec.describe AnswersController, type: :controller do
 
       subject { delete :destroy, params: { question_id: question, id: answer } }
 
-      it { expect { subject }.to change(Answer, :count).by(0) }
+      it { expect { subject }.to_not change(Answer, :count) }
       it do
         subject
         expect(response).to redirect_to(question_path(question))

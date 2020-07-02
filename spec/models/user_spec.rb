@@ -14,31 +14,26 @@ RSpec.describe User, type: :model do
   context 'methods' do
     describe '#author_of?' do
       let(:user) { create(:user) }
-      let (:question) { create(:question, user: owner) }
-      let (:answer) { create(:answer, user: owner) }
 
-      context 'when user is owner for' do
-        let!(:owner) { user }
+      let(:correct_struct) { Struct.new(:user_id) }
+      let(:incorrect_struct) { Struct.new(:another_field_id) }
 
-        context 'question' do
-          it { expect(user.author_of?(question)).to be_truthy }
-        end
+      context 'when user is owner for object' do
+        let(:object) { correct_struct.new(user.id) }
 
-        context 'answer' do
-          it { expect(user.author_of?(answer)).to be_truthy }
-        end
+        it { expect(user).to be_author_of(object) }
       end
 
-      context 'when user is not owner for' do
-        let!(:owner) { create(:user) }
+      context 'when user is not owner for object' do
+        let(:object) { correct_struct.new(create(:user).id) }
 
-        context 'question' do
-          it { expect(user.author_of?(question)).to be_falsey }
-        end
+        it { expect(user).to_not be_author_of(object) }
+      end
 
-        context "answer" do
-          it { expect(user.author_of?(answer)).to be_falsey }
-        end
+      context 'when user is not owner for object' do
+        let(:object) { incorrect_struct.new(user.id) }
+
+        it { expect(user).to_not be_author_of(object) }
       end
     end
   end

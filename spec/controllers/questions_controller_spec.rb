@@ -122,7 +122,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { login(user) }
       let!(:question) { create(:question, user: another_user) }
 
-      it { expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0) }
+      it { expect { delete :destroy, params: { id: question } }.to_not change(Question, :count) }
       it do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to(questions_path)
