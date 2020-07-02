@@ -1,28 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:user) { create(:user) }
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
 
-  describe '#GET index' do
-    before { get :index, params: { question_id: question } }
-
-    it { expect(response).to render_template(:index) }
-  end
-
-  describe '#GET new' do
-    before { get :new, params: { question_id: question } }
-
-    it { expect(response).to render_template(:new) }
-    it { expect(assigns(:answer)).to be_a_new(Answer) }
-    it { expect(assigns(:answer).question).to eq(question) }
-  end
-
-  describe '#GET show' do
-    before { get :show, params: { question_id: question, id: answer } }
-
-    it { expect(response).to render_template(:show) }
-  end
+  before { sign_in(user) }
 
   describe '#GET edit' do
     before { get :edit, params: { question_id: question, id: answer } }
@@ -40,7 +23,7 @@ RSpec.describe AnswersController, type: :controller do
       it { expect { subject }.to change(question.answers, :count).by(1) }
       it do
         subject
-        expect(response).to redirect_to(question_answer_path(question, Answer.last))
+        expect(response).to redirect_to(question_path(question))
       end
     end
 
@@ -51,7 +34,7 @@ RSpec.describe AnswersController, type: :controller do
         it { expect { subject }.to_not change(Answer, :count) }
         it do
           subject
-          expect(response).to render_template(:new)
+          expect(response).to render_template('questions/show')
         end
       end
     end
@@ -63,16 +46,18 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       let(:answer_params) { { body: 'new_body' } }
 
+      it { expect(response).to redirect_to(question_path(question)) }
       it { expect(assigns(:answer)).to eq(answer) }
       it { expect(answer.reload.body).to eq('new_body') }
     end
 
     context 'with invalid attributes' do
       context 'when body empty' do
-        let(:answer_params) { attributes_for(:answer, :empty_body)  }
+        let(:answer_params) { attributes_for(:answer, :empty_body) }
 
         it { expect(response).to render_template(:edit) }
-        it { expect(answer.reload.body).to eq('My body') }
+        it { expect(assigns(:answer)).to eq(answer) }
+        it { expect(answer.reload.body).to eq(answer.body) }
       end
     end
   end

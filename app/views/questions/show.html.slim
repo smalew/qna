@@ -1,2 +1,14 @@
+= render 'shared/errors', recource: answer
+
 h1= question.title
 p= question.body
+
+h2= I18n.t('answer.header')
+
+- answers.each do |answer|
+  p= answer.body
+
+= form_with model: [question, answer], local: true do |f|
+  = f.label :body
+  = f.text_area :body
+  = f.submit I18n.t('answer.form.create_button')

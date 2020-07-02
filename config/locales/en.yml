@@ -31,7 +31,13 @@
 
 en:
   question:
+    header: Questions
     successful_create: Your question successfully created.
     new_button: Ask question
     form:
       create_button: Ask
+  answer:
+    header: Answers
+    successful_create: Your answer successfully created.
+    form:
+      create_button: Answer
