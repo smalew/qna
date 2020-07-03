@@ -8,14 +8,8 @@ RSpec.describe AnswersController, type: :controller do
 
   before { sign_in(user) }
 
-  describe '#GET edit' do
-    before { get :edit, params: { question_id: question, id: answer } }
-
-    it { expect(response).to render_template(:edit) }
-  end
-
   describe '#POST create' do
-    subject { post :create, params: { question_id: question, answer: answer_params } }
+    subject { post :create, params: { question_id: question, answer: answer_params, format: :js }  }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -28,7 +22,7 @@ RSpec.describe AnswersController, type: :controller do
       end
       it do
         subject
-        expect(response).to redirect_to(question_path(question))
+        expect(response).to render_template(:create)
       end
     end
 
@@ -39,19 +33,19 @@ RSpec.describe AnswersController, type: :controller do
         it { expect { subject }.to_not change(Answer, :count) }
         it do
           subject
-          expect(response).to render_template('questions/show')
+          expect(response).to render_template(:create)
         end
       end
     end
   end
 
   describe '#PATCH update' do
-    before { patch :update, params: { question_id: question, id: answer, answer: answer_params } }
+    before { patch :update, params: { question_id: question, id: answer, answer: answer_params, format: :js } }
 
     context 'with valid attributes' do
       let(:answer_params) { { body: 'new_body' } }
 
-      it { expect(response).to redirect_to(question_path(question)) }
+      it { expect(response).to render_template(:update) }
       it { expect(assigns(:answer)).to eq(answer) }
       it { expect(answer.reload.body).to eq('new_body') }
     end
@@ -60,7 +54,7 @@ RSpec.describe AnswersController, type: :controller do
       context 'when body empty' do
         let(:answer_params) { attributes_for(:answer, :empty_body) }
 
-        it { expect(response).to render_template(:edit) }
+        it { expect(response).to render_template(:update) }
         it { expect(assigns(:answer)).to eq(answer) }
         it { expect(answer.reload.body).to eq(answer.body) }
       end

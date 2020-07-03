@@ -1,24 +1,14 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  def edit
-  end
-
   def create
     answer.user = current_user
-    if answer.save
-      redirect_to question_path(answer.question), notice: I18n.t('answer.successful_create')
-    else
-      render 'questions/show', locals: { model: [answer.question, answer] }
-    end
+    answer.save
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to question_path(answer.question)
-    else
-      render :edit
-    end
+    answer.update(answer_params)
+    @question = answer.question
   end
 
   def destroy
