@@ -1,6 +1,6 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
 
 <% if answer.persisted? %>
-  $('.answers').append('<%= j render answer %>')
+  $('.answers').append("<div id='answer-id-<%= answer.id %>'><%= j render answer %></div>")
   $('.new-answer #answer_body').val('')
 <% end %>

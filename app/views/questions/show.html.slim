@@ -1,12 +1,13 @@
-.question
-  h1= question.title
-  p= question.body
+#question
+  = render question
 
-  - if current_user&.author_of?(question)
-    = link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
+#best-answer
+  p= question.best_answer&.body
 
 .answers
-  = render answers
+  - answers.each do |answer|
+    div id="answer-id-#{answer.id}"
+      = render answer
 
 .answer-errors
 .new-answer

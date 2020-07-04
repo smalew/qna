@@ -75,11 +75,12 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe '#PATCH update' do
     before { login(user) }
-    before { patch :update, params: { id: question, question: question_params } }
+    before { patch :update, params: { id: question, question: question_params, format: :js } }
 
     context 'with valid attributes' do
       let(:question_params) { { title: 'new_title', body: 'new_body' } }
 
+      it { expect(response).to render_template(:update) }
       it { expect(assigns(:question)).to eq(question) }
       it { expect(question.reload.title).to eq('new_title') }
       it { expect(question.reload.body).to eq('new_body') }
@@ -87,7 +88,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with invalid attributes' do
       shared_examples 'invalid result' do
-        it { expect(response).to render_template(:edit) }
+        it { expect(response).to render_template(:update) }
         it { expect(question.reload.title).to eq(question.title) }
         it { expect(question.reload.body).to eq(question.body) }
       end

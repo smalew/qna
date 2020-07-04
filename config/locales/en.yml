@@ -36,7 +36,9 @@ en:
     successful_destroy: Your question successfully deleted.
     failure_destroy: Your can not delete question.
     new_button: Ask question
+    edit_button: Edit question
     destroy_button: Delete question
+    save_button: Save question
     form:
       create_button: Ask
   answer:
@@ -45,6 +47,7 @@ en:
     successful_destroy: Your answer successfully deleted.
     failure_destroy: Your can not delete answer.
     destroy_button: Delete answer
+    choose_as_best: Choose as best
     form:
       create_button: Answer
       save_button: Save

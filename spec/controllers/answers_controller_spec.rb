@@ -9,7 +9,7 @@ RSpec.describe AnswersController, type: :controller do
   before { sign_in(user) }
 
   describe '#POST create' do
-    subject { post :create, params: { question_id: question, answer: answer_params, format: :js }  }
+    subject { post :create, params: { question_id: question, answer: answer_params, format: :js } }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -66,12 +66,12 @@ RSpec.describe AnswersController, type: :controller do
       let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: user) }
 
-      subject { delete :destroy, params: { question_id: question, id: answer } }
+      subject { delete :destroy, params: { question_id: question, id: answer, format: :js } }
 
       it { expect { subject }.to change(Answer, :count).by(-1) }
       it do
         subject
-        expect(response).to redirect_to(question_path(question))
+        expect(response).to render_template(:destroy)
       end
     end
 
@@ -79,12 +79,75 @@ RSpec.describe AnswersController, type: :controller do
       let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: another_user) }
 
-      subject { delete :destroy, params: { question_id: question, id: answer } }
+      subject { delete :destroy, params: { question_id: question, id: answer, format: :js } }
 
       it { expect { subject }.to_not change(Answer, :count) }
       it do
         subject
-        expect(response).to redirect_to(question_path(question))
+        expect(response).to render_template(:destroy)
+      end
+    end
+  end
+
+  describe '#PATCH choose_as_best' do
+    shared_examples 'correct result' do
+      it { expect(response).to render_template(:choose_as_best) }
+      it { expect(question.reload.best_answer).to eq(answer) }
+    end
+
+    shared_examples 'incorrect result' do
+      it { expect(response).to render_template(:choose_as_best) }
+      it { expect(question.reload.best_answer).to be_nil }
+    end
+
+    context 'user is question owner' do
+      before { login(user) }
+      let!(:question) { create(:question, user: user) }
+
+      context "and best answer do not exist yet" do
+        before { patch :choose_as_best, params: { id: answer, format: :js } }
+
+        context 'and answer owner' do
+          let!(:answer) { create(:answer, user: user, question: question) }
+
+          include_examples 'correct result'
+        end
+
+        context "and isn't answer owner" do
+          let!(:answer) { create(:answer, question: question) }
+
+          include_examples 'correct result'
+        end
+      end
+
+      context "and best answer already exist" do
+        let!(:answer) { create(:answer, question: question) }
+        let!(:another_answer) { create(:answer, question: question) }
+
+        before { question.update(best_answer: answer) }
+        before { patch :choose_as_best, params: { id: another_answer, format: :js } }
+
+        it { expect(response).to render_template(:choose_as_best) }
+        it { expect(question.reload.best_answer).to eq(another_answer) }
+      end
+    end
+
+    context 'user is not question owner' do
+      before { login(user) }
+      let!(:question) { create(:question) }
+
+      before { patch :choose_as_best, params: { id: answer, format: :js } }
+
+      context 'and answer owner' do
+        let!(:answer) { create(:answer, user: user, question: question) }
+
+        include_examples 'incorrect result'
+      end
+
+      context "and isn't answer owner" do
+        let!(:answer) { create(:answer, question: question) }
+
+        include_examples 'incorrect result'
       end
     end
   end
