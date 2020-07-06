@@ -1,1 +1,3 @@
 $('#best-answer').html('<%= j answer.body %>');
+
+$('<%= "#answer-id-#{answer.id}" %>').remove()

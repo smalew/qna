@@ -7,17 +7,20 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params)
-    @question = answer.question
+    answer.update(answer_params) if current_user.author_of?(answer)
   end
 
   def destroy
-    current_user.author_of?(answer) && answer.destroy
+    answer.destroy if current_user.author_of?(answer)
   end
 
   def choose_as_best
     question = answer.question
-    question.update(best_answer: answer) if current_user.author_of?(question)
+
+    if current_user.author_of?(question)
+      question.best_answer&.update(best_answer: false)
+      answer.update(best_answer: true)
+    end
   end
 
   private

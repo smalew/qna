@@ -4,6 +4,7 @@ FactoryBot.define do
     question
 
     body { "My body" }
+    best_answer { false }
 
     trait :empty_body do
       body { '' }

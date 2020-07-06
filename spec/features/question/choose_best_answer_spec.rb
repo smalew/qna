@@ -10,17 +10,18 @@ feature 'User can choose best answer', %q{
 
     background { sign_in(user) }
 
-    given!(:answer) { create(:answer, question: question)}
-
     context 'question owner', js: true do
       context 'when only one answer' do
         given(:question) { create(:question, user: user) }
+        given!(:answer) { create(:answer, question: question)}
 
         scenario 'can choose best answer' do
           visit question_path(question)
 
           within '.answers' do
             click_on I18n.t('answer.choose_as_best')
+
+            expect(page).to_not have_content(answer.body)
           end
 
           within '#best-answer' do
@@ -31,15 +32,23 @@ feature 'User can choose best answer', %q{
 
       context 'when best answer already exist' do
         given(:question) { create(:question, user: user) }
+        given!(:answer) { create(:answer, question: question, best_answer: true)}
         given!(:another_answer) { create(:answer, question: question)}
-
-        background { question.update(best_answer: answer)}
 
         scenario 'can choose another best answer' do
           visit question_path(question)
 
-          within "#answer-id-#{another_answer.id}" do
+          within '#best-answer' do
+            expect(page).to have_content(answer.body)
+          end
+
+          within '.answers' do
+            expect(page).to have_content(another_answer.body)
+
             click_on I18n.t('answer.choose_as_best')
+
+            expect(page).to have_content(answer.body)
+            expect(page).to_not have_content(another_answer.body)
           end
 
           within '#best-answer' do

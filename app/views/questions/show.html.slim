@@ -5,7 +5,7 @@
   p= question.best_answer&.body
 
 .answers
-  - answers.each do |answer|
+  - answers.casual.each do |answer|
     div id="answer-id-#{answer.id}"
       = render answer
 

@@ -4,7 +4,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
   let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
 
   before { sign_in(user) }
 
@@ -42,28 +41,53 @@ RSpec.describe AnswersController, type: :controller do
   describe '#PATCH update' do
     before { patch :update, params: { question_id: question, id: answer, answer: answer_params, format: :js } }
 
-    context 'with valid attributes' do
-      let(:answer_params) { { body: 'new_body' } }
+    context 'user is answer owner' do
+      let!(:answer) { create(:answer, question: question, user: user) }
 
-      it { expect(response).to render_template(:update) }
-      it { expect(assigns(:answer)).to eq(answer) }
-      it { expect(answer.reload.body).to eq('new_body') }
+      context 'with valid attributes' do
+        let(:answer_params) { { body: 'new_body' } }
+
+        it { expect(response).to render_template(:update) }
+        it { expect(assigns(:answer)).to eq(answer) }
+        it { expect(answer.reload.body).to eq('new_body') }
+      end
+
+      context 'with invalid attributes' do
+        context 'when body empty' do
+          let(:answer_params) { attributes_for(:answer, :empty_body) }
+
+          it { expect(response).to render_template(:update) }
+          it { expect(assigns(:answer)).to eq(answer) }
+          it { expect(answer.reload.body).to eq(answer.body) }
+        end
+      end
     end
 
-    context 'with invalid attributes' do
-      context 'when body empty' do
-        let(:answer_params) { attributes_for(:answer, :empty_body) }
+    context 'user is not answer owner' do
+      let!(:answer) { create(:answer, question: question) }
+
+      context 'with valid attributes' do
+        let(:answer_params) { { body: 'new_body' } }
 
         it { expect(response).to render_template(:update) }
         it { expect(assigns(:answer)).to eq(answer) }
         it { expect(answer.reload.body).to eq(answer.body) }
+      end
+
+      context 'with invalid attributes' do
+        context 'when body empty' do
+          let(:answer_params) { attributes_for(:answer, :empty_body) }
+
+          it { expect(response).to render_template(:update) }
+          it { expect(assigns(:answer)).to eq(answer) }
+          it { expect(answer.reload.body).to eq(answer.body) }
+        end
       end
     end
   end
 
   describe '#DELETE destroy' do
     context 'user is answer owner' do
-      let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: user) }
 
       subject { delete :destroy, params: { question_id: question, id: answer, format: :js } }
@@ -76,7 +100,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'user is not answer owner' do
-      let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: another_user) }
 
       subject { delete :destroy, params: { question_id: question, id: answer, format: :js } }
@@ -121,10 +144,9 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context "and best answer already exist" do
-        let!(:answer) { create(:answer, question: question) }
+        let!(:answer) { create(:answer, question: question, best_answer: true) }
         let!(:another_answer) { create(:answer, question: question) }
 
-        before { question.update(best_answer: answer) }
         before { patch :choose_as_best, params: { id: another_answer, format: :js } }
 
         it { expect(response).to render_template(:choose_as_best) }

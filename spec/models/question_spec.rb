@@ -3,13 +3,35 @@ require 'rails_helper'
 RSpec.describe Question, type: :model do
   context 'associations' do
     it { should belong_to(:user) }
-    it { should belong_to(:best_answer).required(false) }
     it { should have_many(:answers).dependent(:destroy) }
-    it { should have_db_column(:best_answer_id) }
   end
 
   context 'validations' do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:body) }
+  end
+
+  context 'methods' do
+    describe '#best_answer' do
+      let(:question) { create(:question) }
+
+      context 'with best answer' do
+        let!(:first_answer) { create(:answer, question: question, best_answer: false) }
+        let!(:second_answer) { create(:answer, question: question, best_answer: true) }
+
+        it { expect(question.reload.best_answer).to eq(second_answer) }
+      end
+
+      context 'without best answer' do
+        let!(:first_answer) { create(:answer, question: question, best_answer: false) }
+        let!(:second_answer) { create(:answer, question: question, best_answer: false) }
+
+        it { expect(question.reload.best_answer).to eq(nil) }
+      end
+
+      context 'without answers' do
+        it { expect(question.reload.best_answer).to eq(nil) }
+      end
+    end
   end
 end
