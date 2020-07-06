@@ -47,3 +47,5 @@ en:
     destroy_button: Delete answer
     form:
       create_button: Answer
+      save_button: Save
+      edit_button: Edit

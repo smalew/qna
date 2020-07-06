@@ -7,7 +7,7 @@ feature 'User can create answer', %q{
 } do
   given!(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background { sign_in(user) }
@@ -18,8 +18,9 @@ feature 'User can create answer', %q{
       fill_in 'Body', with: 'Answer body'
       click_on I18n.t('answer.form.create_button')
 
-      expect(page).to have_content(I18n.t('answer.successful_create'))
-      expect(page).to have_content('Answer body')
+      within '.answers' do
+        expect(page).to have_content('Answer body')
+      end
     end
 
     scenario 'answer with empty body to the question' do
@@ -28,7 +29,9 @@ feature 'User can create answer', %q{
       fill_in 'Body', with: ''
       click_on I18n.t('answer.form.create_button')
 
-      expect(page).to have_content("Body can't be blank")
+      within '.answer-errors' do
+        expect(page).to have_content("Body can't be blank")
+      end
     end
   end
 
