@@ -32,8 +32,8 @@ feature 'User can choose best answer', %q{
 
       context 'when best answer already exist' do
         given(:question) { create(:question, user: user) }
-        given!(:answer) { create(:answer, question: question, best_answer: true)}
-        given!(:another_answer) { create(:answer, question: question)}
+        given!(:answer) { create(:answer, question: question, body: 'first answer', best_answer: true)}
+        given!(:another_answer) { create(:answer, question: question, body: 'second answer')}
 
         scenario 'can choose another best answer' do
           visit question_path(question)

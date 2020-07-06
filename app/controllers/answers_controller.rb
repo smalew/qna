@@ -18,7 +18,9 @@ class AnswersController < ApplicationController
     question = answer.question
 
     if current_user.author_of?(question)
-      question.best_answer&.update(best_answer: false)
+      @best_answer = question.best_answer
+
+      @best_answer&.update(best_answer: false)
       answer.update(best_answer: true)
     end
   end
