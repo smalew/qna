@@ -1,7 +1,1 @@
-$('#best-answer').html('<%= j answer.body %>');
-
-$('<%= "#answer-id-#{answer.id}" %>').remove()
-
-<% if @best_answer.present? %>
-  $('.answers').append("<div id='answer-id-<%= @best_answer.id %>'><%= j render @best_answer %></div>")
-<% end %>
+$('.answers').html('<%= j render @question.answers.ordered_by_best %>')

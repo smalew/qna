@@ -25,13 +25,6 @@ RSpec.describe QuestionsController, type: :controller do
     it { expect(response).to render_template(:show) }
   end
 
-  describe '#GET edit' do
-    before { login(user) }
-    before { get :edit, params: { id: question } }
-
-    it { expect(response).to render_template(:edit) }
-  end
-
   describe '#POST create' do
     before { login(user) }
     subject { post :create, params: { question: question_params } }
@@ -116,7 +109,7 @@ RSpec.describe QuestionsController, type: :controller do
       context 'with valid attributes' do
         let(:question_params) { { title: 'new_title', body: 'new_body' } }
 
-        it { expect(response).to render_template(:update) }
+        it { expect(response).to render_template(:show) }
         it { expect(assigns(:question)).to eq(question) }
         it { expect(question.reload.title).to eq(question.title) }
         it { expect(question.reload.body).to eq(question.body) }
@@ -124,7 +117,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       context 'with invalid attributes' do
         shared_examples 'invalid result' do
-          it { expect(response).to render_template(:update) }
+          it { expect(response).to render_template(:show) }
           it { expect(question.reload.title).to eq(question.title) }
           it { expect(question.reload.body).to eq(question.body) }
         end

@@ -11,9 +11,6 @@ class QuestionsController < ApplicationController
     @question = Question.new
   end
 
-  def edit
-  end
-
   def create
     question.user = current_user
     if question.save
@@ -24,7 +21,11 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.author_of?(question)
+    if current_user.author_of?(question)
+      question.update(question_params)
+    else
+      render :show
+    end
   end
 
   def destroy
@@ -48,7 +49,7 @@ class QuestionsController < ApplicationController
   helper_method :question
 
   def answers
-    @answers ||= question.answers
+    @answers ||= question.answers.ordered_by_best
   end
   helper_method :answers
 

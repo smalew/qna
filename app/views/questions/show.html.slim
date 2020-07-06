@@ -1,13 +1,9 @@
 #question
   = render question
 
-#best-answer
-  p= question.best_answer&.body
-
 .answers
-  - answers.casual.each do |answer|
-    div id="answer-id-#{answer.id}"
-      = render answer
+  - answers.each do |answer|
+    = render answer
 
 .answer-errors
 .new-answer

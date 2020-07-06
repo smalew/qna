@@ -69,7 +69,7 @@ RSpec.describe AnswersController, type: :controller do
       context 'with valid attributes' do
         let(:answer_params) { { body: 'new_body' } }
 
-        it { expect(response).to render_template(:update) }
+        it { expect(response).to render_template('questions/show') }
         it { expect(assigns(:answer)).to eq(answer) }
         it { expect(answer.reload.body).to eq(answer.body) }
       end
@@ -78,7 +78,7 @@ RSpec.describe AnswersController, type: :controller do
         context 'when body empty' do
           let(:answer_params) { attributes_for(:answer, :empty_body) }
 
-          it { expect(response).to render_template(:update) }
+          it { expect(response).to render_template('questions/show') }
           it { expect(assigns(:answer)).to eq(answer) }
           it { expect(answer.reload.body).to eq(answer.body) }
         end
@@ -107,7 +107,7 @@ RSpec.describe AnswersController, type: :controller do
       it { expect { subject }.to_not change(Answer, :count) }
       it do
         subject
-        expect(response).to render_template(:destroy)
+        expect(response).to render_template('questions/show')
       end
     end
   end
