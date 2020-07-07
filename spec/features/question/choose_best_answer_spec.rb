@@ -21,7 +21,9 @@ feature 'User can choose best answer', %q{
           within '.answers' do
             click_on I18n.t('answer.choose_as_best')
 
-            expect(page).to have_content(answer.body)
+            within '#best-answer' do
+              expect(page).to have_content(answer.body)
+            end
           end
         end
       end
@@ -31,20 +33,24 @@ feature 'User can choose best answer', %q{
         given!(:answer) { create(:answer, question: question, body: 'first answer', best_answer: true)}
         given!(:another_answer) { create(:answer, question: question, body: 'second answer')}
 
-        subject { page.all('.answers p').map(&:text) }
-
         scenario 'can choose another best answer' do
           visit question_path(question)
 
-          page.all('.answers p').map(&:text).should eq([answer.body, another_answer.body])
+          within '.answers' do
+            within '#best-answer' do
+              expect(page).to have_content(answer.body)
+            end
+            expect(page).to have_content(another_answer.body)
 
-          within "#answer-id-#{another_answer.id}" do
-            click_on I18n.t('answer.choose_as_best')
+            within "#answer-id-#{another_answer.id}" do
+              click_on I18n.t('answer.choose_as_best')
+            end
+
+            within '#best-answer' do
+              expect(page).to have_content(another_answer.body)
+            end
+            expect(page).to have_content(answer.body)
           end
-
-          sleep(2)
-
-          page.all('.answers p').map(&:text).should eq([another_answer.body, answer.body])
         end
       end
     end

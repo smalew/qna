@@ -10,8 +10,8 @@ class Answer < ApplicationRecord
 
   def choose_as_best
     Answer.transaction do
-      question.best_answer&.update(best_answer: false)
-      update(best_answer: true)
+      question.best_answer&.update!(best_answer: false)
+      update!(best_answer: true)
     end
   end
 end
