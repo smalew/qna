@@ -7,16 +7,25 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params)
-    @question = answer.question
+    if current_user.author_of?(answer)
+      answer.update(answer_params)
+    else
+      render 'questions/show'
+    end
   end
 
   def destroy
-    if current_user.author_of?(answer) && answer.destroy
-      redirect_to question_path(answer.question), notice: I18n.t('answer.successful_destroy')
+    if current_user.author_of?(answer)
+      answer.destroy
     else
-      redirect_to question_path(answer.question), alert: I18n.t('answer.failure_destroy')
+      render 'questions/show'
     end
+  end
+
+  def choose_as_best
+    @question = answer.question
+
+    answer.choose_as_best if current_user.author_of?(@question)
   end
 
   private
@@ -24,16 +33,19 @@ class AnswersController < ApplicationController
   def question
     @question ||= Question.find(params[:question_id])
   end
+
   helper_method :question
 
   def answers
     @answers ||= question.answers
   end
+
   helper_method :answers
 
   def answer
     @answer ||= params[:id].present? ? Answer.find(params[:id]) : answers.build(answer_params)
   end
+
   helper_method :answer
 
   def answer_params

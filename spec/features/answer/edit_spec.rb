@@ -9,39 +9,53 @@ feature 'User can edit answer', %q{
 
   describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
-    given!(:answer) { create(:answer, question: question, user: user) }
+    given!(:answer) { create(:answer, question: question, user: author) }
 
     background { sign_in(user) }
     background { visit question_path(question) }
 
-    scenario 'answer to the question' do
-      within '.answers' do
-        click_on I18n.t('answer.form.edit_button')
+    context 'own answer' do
+      given(:author) { user }
 
-        fill_in 'Body', with: 'New Answer body'
+      scenario 'edit answer to the question' do
+        within '.answers' do
+          click_on I18n.t('answer.form.edit_button')
 
-        click_on I18n.t('answer.form.save_button')
+          fill_in 'Body', with: 'New Answer body'
 
-        expect(page).to have_content('New Answer body')
-        expect(page).to_not have_content(answer.body)
-        expect(page).to_not have_selector('textarea')
+          click_on I18n.t('answer.form.save_button')
+
+          expect(page).to have_content('New Answer body')
+          expect(page).to_not have_content(answer.body)
+          expect(page).to_not have_selector('textarea')
+        end
+      end
+
+      scenario 'edit answer with empty body to the question' do
+        within '.answers' do
+          click_on I18n.t('answer.form.edit_button')
+
+          fill_in 'Body', with: ''
+
+          click_on I18n.t('answer.form.save_button')
+
+          expect(page).to have_content(answer.body)
+          expect(page).to have_selector('textarea')
+        end
+
+        within '.answer-errors' do
+          expect(page).to have_content("Body can't be blank")
+        end
       end
     end
 
-    scenario 'answer with empty body to the question' do
-      within '.answers' do
-        click_on I18n.t('answer.form.edit_button')
+    context "someone else's answer" do
+      given(:author) { create(:user) }
 
-        fill_in 'Body', with: ''
-
-        click_on I18n.t('answer.form.save_button')
-
-        expect(page).to have_content(answer.body)
-        expect(page).to have_selector('textarea')
-      end
-
-      within '.answer-errors' do
-        expect(page).to have_content("Body can't be blank")
+      scenario 'edit answer to the question' do
+        within '.answers' do
+          expect(page).to_not have_link(I18n.t('answer.form.edit_button'))
+        end
       end
     end
   end
@@ -49,7 +63,7 @@ feature 'User can edit answer', %q{
   describe 'Unauthenticated user' do
     background { visit question_path(question) }
 
-    scenario 'ask question' do
+    scenario 'edit answer' do
       within '.answers' do
         expect(page).to_not have_link(I18n.t('answer.form.edit_button'))
       end

@@ -25,13 +25,6 @@ RSpec.describe QuestionsController, type: :controller do
     it { expect(response).to render_template(:show) }
   end
 
-  describe '#GET edit' do
-    before { login(user) }
-    before { get :edit, params: { id: question } }
-
-    it { expect(response).to render_template(:edit) }
-  end
-
   describe '#POST create' do
     before { login(user) }
     subject { post :create, params: { question: question_params } }
@@ -75,33 +68,71 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe '#PATCH update' do
     before { login(user) }
-    before { patch :update, params: { id: question, question: question_params } }
+    before { patch :update, params: { id: question, question: question_params, format: :js } }
 
-    context 'with valid attributes' do
-      let(:question_params) { { title: 'new_title', body: 'new_body' } }
+    context 'when user is question owner' do
+      let(:question) { create(:question, user: user) }
 
-      it { expect(assigns(:question)).to eq(question) }
-      it { expect(question.reload.title).to eq('new_title') }
-      it { expect(question.reload.body).to eq('new_body') }
+      context 'with valid attributes' do
+        let(:question_params) { { title: 'new_title', body: 'new_body' } }
+
+        it { expect(response).to render_template(:update) }
+        it { expect(assigns(:question)).to eq(question) }
+        it { expect(question.reload.title).to eq('new_title') }
+        it { expect(question.reload.body).to eq('new_body') }
+      end
+
+      context 'with invalid attributes' do
+        shared_examples 'invalid result' do
+          it { expect(response).to render_template(:update) }
+          it { expect(question.reload.title).to eq(question.title) }
+          it { expect(question.reload.body).to eq(question.body) }
+        end
+
+        context 'when title empty' do
+          let(:question_params) { { title: '', body: 'new_body' } }
+
+          include_examples 'invalid result'
+        end
+
+        context 'when body empty' do
+          let(:question_params) { { title: 'new_title', body: '' } }
+
+          include_examples 'invalid result'
+        end
+      end
     end
 
-    context 'with invalid attributes' do
-      shared_examples 'invalid result' do
-        it { expect(response).to render_template(:edit) }
+    context 'when user is not question owner' do
+      let(:question) { create(:question) }
+
+      context 'with valid attributes' do
+        let(:question_params) { { title: 'new_title', body: 'new_body' } }
+
+        it { expect(response).to render_template(:show) }
+        it { expect(assigns(:question)).to eq(question) }
         it { expect(question.reload.title).to eq(question.title) }
         it { expect(question.reload.body).to eq(question.body) }
       end
 
-      context 'when title empty' do
-        let(:question_params) { { title: '', body: 'new_body' } }
+      context 'with invalid attributes' do
+        shared_examples 'invalid result' do
+          it { expect(response).to render_template(:show) }
+          it { expect(question.reload.title).to eq(question.title) }
+          it { expect(question.reload.body).to eq(question.body) }
+        end
 
-        include_examples 'invalid result'
-      end
+        context 'when title empty' do
+          let(:question_params) { { title: '', body: 'new_body' } }
 
-      context 'when body empty' do
-        let(:question_params) { { title: 'new_title', body: '' } }
+          include_examples 'invalid result'
+        end
 
-        include_examples 'invalid result'
+        context 'when body empty' do
+          let(:question_params) { { title: 'new_title', body: '' } }
+
+          include_examples 'invalid result'
+        end
       end
     end
   end
