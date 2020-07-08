@@ -5,6 +5,7 @@ RSpec.describe Answer, type: :model do
     it { should belong_to(:user) }
     it { should belong_to(:question) }
     it { should have_db_column(:question_id) }
+    it { expect(build(:answer).files).to be_instance_of(ActiveStorage::Attached::Many) }
   end
 
   context 'scopes' do

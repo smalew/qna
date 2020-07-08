@@ -4,6 +4,7 @@ RSpec.describe Question, type: :model do
   context 'associations' do
     it { should belong_to(:user) }
     it { should have_many(:answers).dependent(:destroy) }
+    it { expect(build(:question).files).to be_instance_of(ActiveStorage::Attached::Many) }
   end
 
   context 'validations' do

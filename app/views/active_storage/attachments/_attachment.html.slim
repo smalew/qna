@@ -1,0 +1,6 @@
+- if attachment.present?
+  = link_to attachment.filename, url_for(attachment)
+  = link_to I18n.t('delete_attachment'),
+          delete_attachment_question_path(question, attachment),
+          method: :delete,
+          remote: true
