@@ -36,14 +36,6 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def destroy_attachment
-    if current_user.author_of?(question) && attachment.present?
-      attachment.purge
-    else
-      render :show
-    end
-  end
-
   private
 
   def questions
@@ -65,10 +57,6 @@ class QuestionsController < ApplicationController
     @answer ||= question.answers.build
   end
   helper_method :answer
-
-  def attachment
-    @attachment ||= question.files.find_by(id: params[:attachment_id])
-  end
 
   def question_params
     params.require(:question).permit(:title, :body, files: [])

@@ -5,9 +5,8 @@
     - else
       div= answer.body
 
-    - if answer.files.present?
-      - answer.files.each do |file|
-        = link_to file.filename, url_for(file)
+    .attachments
+      = render answer.files
 
     - if current_user&.author_of?(answer.question)
       = link_to I18n.t('answer.choose_as_best'), choose_as_best_answer_path(answer), method: :patch, remote: true
@@ -22,5 +21,5 @@
           = f.text_area :body
         p
           = f.label :files
-          = f.file_field :files, multiple: true
+          = f.file_field :files, multiple: true, direct_upload: true
         = f.submit I18n.t('answer.form.save_button')

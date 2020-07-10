@@ -30,6 +30,7 @@
 /config/master.key
 /config/database.yml
 /config/credentials.yml.enc
+/config/gcs-credentials.json
 
 /public/packs
 /public/packs-test

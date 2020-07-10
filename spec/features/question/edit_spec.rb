@@ -14,12 +14,11 @@ feature 'User can edit question', %q{
     background { sign_in(user) }
     background { visit question_path(question) }
 
-    context 'own answer' do
+    context 'when question owner' do
       given(:author) { user }
 
-      background { click_on I18n.t('question.edit_button') }
-
       context 'can be edited' do
+        background { click_on I18n.t('question.edit_button') }
 
         scenario 'with correct params' do
           within '#question' do
@@ -66,6 +65,8 @@ feature 'User can edit question', %q{
       end
 
       context 'can not be edited' do
+        background { click_on I18n.t('question.edit_button') }
+
         scenario 'with empty title' do
           within '#question' do
             fill_in 'Title', with: ''
@@ -98,18 +99,42 @@ feature 'User can edit question', %q{
           end
         end
       end
-    end
 
-    context 'can delete' do
-      given!(:question) { create(:question, :with_file, user: user) }
+      context 'can delete attachment' do
+        given!(:question) { create(:question, :with_file, user: user) }
 
-      scenario 'attached file' do
-        within '#question' do
-          expect(page).to have_content(question.files.first.filename)
+        scenario 'attached file' do
+          within '#question' do
+            within '.attachments' do
+              expect(page).to have_content(question.files.first.filename)
 
-          click_on 'Delete attachment'
+              click_on I18n.t('delete_attachment')
 
-          expect(page).to_not have_content(question.files.first.filename)
+              expect(page).to_not have_content(question.files.first.filename)
+            end
+          end
+        end
+      end
+
+      context 'can delete current attachment from several' do
+        given!(:question) { create(:question, :with_files, user: user) }
+        given(:attachment1) { question.files.first }
+        given(:attachment2) { question.files.last }
+
+        scenario 'attached file' do
+          within '#question' do
+            within '.attachments' do
+              expect(page).to have_content(attachment1.filename)
+              expect(page).to have_content(attachment2.filename)
+
+              within "#attachment-id-#{attachment1.id}" do
+                click_on I18n.t('delete_attachment')
+              end
+
+              expect(page).to_not have_content(attachment1.filename)
+              expect(page).to have_content(attachment2.filename)
+            end
+          end
         end
       end
     end
@@ -120,6 +145,18 @@ feature 'User can edit question', %q{
       scenario 'can not be edited' do
         within '#question' do
           expect(page).to_not have_link(I18n.t('question.edit_button'))
+        end
+      end
+
+      context 'can not be deleted any' do
+        given!(:question) { create(:question, :with_file, user: author) }
+
+        scenario 'attached file' do
+          within '#question' do
+            within '.attachments' do
+              expect(page).to_not have_link(I18n.t('delete_attachment'))
+            end
+          end
         end
       end
     end

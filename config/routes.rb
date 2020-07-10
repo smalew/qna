@@ -10,9 +10,6 @@ Rails.application.routes.draw do
       patch :choose_as_best, on: :member
     end
 
-    delete 'attachments(/:attachment_id)',
-           to: 'questions#destroy_attachment',
-           as: :delete_attachment,
-           on: :member
+    resources :attachments, only: :destroy
   end
 end

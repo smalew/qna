@@ -160,30 +160,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-
-  describe '#DELETE destroy_attachment' do
-    before { login(user) }
-
-    subject { delete :destroy_attachment, params: { id: question, attachment_id: question.files.first, format: :js } }
-
-    context 'user is question owner' do
-      let!(:question) { create(:question, :with_file, user: user) }
-
-      it { expect { subject }.to change(ActiveStorage::Attachment, :count).by(-1) }
-      it do
-        subject
-        expect(response).to render_template(:destroy_attachment)
-      end
-    end
-
-    context 'user is not question owner' do
-      let!(:question) { create(:question, :with_file, user: another_user) }
-
-      it { expect { subject }.to_not change(ActiveStorage::Attachment, :count) }
-      it do
-        subject
-        expect(response).to render_template(:show)
-      end
-    end
-  end
 end

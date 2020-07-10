@@ -15,10 +15,10 @@ feature 'User can edit answer', %q{
     background { sign_in(user) }
     background { visit question_path(question) }
 
-    context 'own answer' do
+    context 'when answer owner' do
       given(:author) { user }
 
-      context 'edit answer' do
+      context 'can edit answer' do
         scenario 'with correct params' do
           within '.answers' do
             within "#answer-id-#{answer.id}" do
@@ -98,6 +98,49 @@ feature 'User can edit answer', %q{
             within "#answer-id-#{another_answer.id}" do
               expect(page).to_not have_link('rails_helper.rb')
               expect(page).to_not have_link('spec_helper.rb')
+            end
+          end
+        end
+      end
+
+      context 'can delete attachment' do
+        given!(:answer) { create(:answer, :with_file, question: question, user: author) }
+        given(:attachment) { answer.files.first }
+
+        scenario 'attached file' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              within '.attachments' do
+                expect(page).to have_content(attachment.filename)
+
+                click_on I18n.t('delete_attachment')
+
+                expect(page).to_not have_content(attachment.filename)
+              end
+            end
+          end
+        end
+      end
+
+      context 'can delete current attachment from several' do
+        given!(:answer) { create(:answer, :with_files, question: question, user: author) }
+        given(:attachment1) { answer.files.first }
+        given(:attachment2) { answer.files.last }
+
+        scenario 'attached file' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              within '.attachments' do
+                expect(page).to have_content(attachment1.filename)
+                expect(page).to have_content(attachment2.filename)
+
+                within "#attachment-id-#{attachment1.id}" do
+                  click_on I18n.t('delete_attachment')
+                end
+
+                expect(page).to_not have_content(attachment1.filename)
+                expect(page).to have_content(attachment2.filename)
+              end
             end
           end
         end
