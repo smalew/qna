@@ -3,14 +3,21 @@
 h1= question.title
 p= question.body
 
+.attachments
+  = render question.files
+
 - if current_user&.author_of?(question)
   = link_to I18n.t('question.edit_button'), '#', class: 'edit-question-link'
   = link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
 
-  .answer-errors
   = form_with model: question, class: 'hidden', html: { id: 'edit-question' } do |f|
-    = f.label :title
-    = f.text_area :title
-    = f.label :body
-    = f.text_area :body
+    p
+      = f.label :title
+      = f.text_area :title
+    p
+      = f.label :body
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
     = f.submit I18n.t('question.save_button')

@@ -2,12 +2,15 @@
   = render question
 
 .answers
-  - answers.each do |answer|
-    = render answer
+  = render answers
 
 .answer-errors
 .new-answer
   = form_with model: [question, answer], class: 'new-answer' do |f|
-    = f.label :body
-    = f.text_area :body
+    p
+      = f.label :body
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
     = f.submit I18n.t('answer.form.create_button')

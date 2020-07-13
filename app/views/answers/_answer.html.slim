@@ -5,6 +5,9 @@
     - else
       div= answer.body
 
+    .attachments
+      = render answer.files
+
     - if current_user&.author_of?(answer.question)
       = link_to I18n.t('answer.choose_as_best'), choose_as_best_answer_path(answer), method: :patch, remote: true
     - if current_user&.author_of?(answer)
@@ -13,6 +16,10 @@
 
       .answer-errors
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-        = f.label :body
-        = f.text_area :body
+        p
+          = f.label :body
+          = f.text_area :body
+        p
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
         = f.submit I18n.t('answer.form.save_button')
