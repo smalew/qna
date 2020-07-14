@@ -30,6 +30,11 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  links:
+    name: Link name
+    url: Link url
+    add: Add Link
+    delete: Delete link
   question:
     header: Questions
     successful_create: Your question successfully created.

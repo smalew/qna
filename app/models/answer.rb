@@ -2,7 +2,11 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
 
+  has_many :links, as: :linkable, dependent: :destroy
+
   has_many_attached :files
+
+  accepts_nested_attributes_for :links, reject_if: :all_blank
 
   scope :casual, -> { where(best_answer: false) }
   scope :best, -> { where(best_answer: true) }

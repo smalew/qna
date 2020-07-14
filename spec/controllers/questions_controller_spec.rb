@@ -17,6 +17,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     it { expect(response).to render_template(:new) }
     it { expect(assigns(:question)).to be_a_new(Question) }
+    it { expect(assigns(:question).links.first).to be_a_new(Link) }
   end
 
   describe '#GET show' do

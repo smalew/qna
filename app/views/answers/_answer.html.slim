@@ -7,6 +7,8 @@
 
     .attachments
       = render answer.files
+    .links
+      = render answer.links
 
     - if current_user&.author_of?(answer.question)
       = link_to I18n.t('answer.choose_as_best'), choose_as_best_answer_path(answer), method: :patch, remote: true

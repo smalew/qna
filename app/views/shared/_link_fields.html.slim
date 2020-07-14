@@ -1,0 +1,8 @@
+.nested-fields
+  .field
+    = f.label :name, I18n.t('links.name')
+    = f.text_field :name
+  .field
+    = f.label :url, I18n.t('links.url')
+    = f.text_field :url
+  = link_to_remove_association I18n.t('links.delete'), f

@@ -1,6 +1,6 @@
 = render 'shared/errors', resource: question
 
-= form_with model: question do |f|
+= form_with model: question, local: true do |f|
   p
     = f.label :title
     = f.text_field :title
@@ -10,4 +10,9 @@
   p
     = f.label :files
     = f.file_field :files, multiple: true
+  #new-links
+    = f.fields_for :links do |link|
+      = render 'shared/link_fields', f: link
+    .links
+      = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
   = f.submit I18n.t('question.form.create_button')

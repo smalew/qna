@@ -1,0 +1,5 @@
+- if link.present?
+  div id="link-id-#{link.id}"
+    = link_to link.name, url_for(link.url)
+    - if current_user.author_of?(link.linkable)
+      / = link_to I18n.t('links.delete'), attachment_path(attachment), method: :delete, remote: true

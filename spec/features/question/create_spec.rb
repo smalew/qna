@@ -63,6 +63,71 @@ feature 'User can create question', %q{
         expect(page).to have_link('rails_helper.rb')
         expect(page).to have_link('spec_helper.rb')
       end
+
+      context 'links', js: true do
+        given(:gist_url) { 'https://gist.github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
+
+        scenario 'with one link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: gist_url
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          within '.links' do
+            expect(page).to have_link('Link name', href: gist_url)
+          end
+        end
+
+        scenario 'with several link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: gist_url
+            end
+
+            click_on 'Add Link'
+
+            within all('.nested-fields')[1] do
+              fill_in I18n.t('links.name'), with: 'Link name second'
+              fill_in I18n.t('links.url'), with: gist_url
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          within '.links' do
+            expect(page).to have_link('Link name', href: gist_url)
+            expect(page).to have_link('Link name second', href: gist_url)
+          end
+        end
+
+        scenario 'with incorrect link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: 'Incorrect Link'
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to_not have_link('Link name', href: 'incorrect link')
+          expect(page).to have_content("Links url is invalid")
+        end
+      end
     end
   end
 

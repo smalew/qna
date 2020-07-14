@@ -4,8 +4,11 @@ RSpec.describe Answer, type: :model do
   context 'associations' do
     it { should belong_to(:user) }
     it { should belong_to(:question) }
+    it { should have_many(:links).dependent(:destroy) }
     it { should have_db_column(:question_id) }
     it { expect(build(:answer).files).to be_instance_of(ActiveStorage::Attached::Many) }
+
+    it { should accept_nested_attributes_for :links }
   end
 
   context 'scopes' do
