@@ -3,7 +3,7 @@
 h1= question.title
 p= question.body
 
-.links
+.attached-links
   = render question.links
 .attachments
   = render question.files
@@ -22,4 +22,9 @@ p= question.body
     p
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+    #new-links
+      = f.fields_for :links do |link|
+        = render 'shared/link_fields', f: link
+      .links
+        = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
     = f.submit I18n.t('question.save_button')

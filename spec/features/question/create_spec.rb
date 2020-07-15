@@ -65,7 +65,7 @@ feature 'User can create question', %q{
       end
 
       context 'links', js: true do
-        given(:gist_url) { 'https://gist.github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
+        given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
 
         scenario 'with one link' do
           fill_in 'Title', with: 'Title question'
@@ -74,14 +74,14 @@ feature 'User can create question', %q{
           within '#new-links' do
             within first('.nested-fields') do
               fill_in I18n.t('links.name'), with: 'Link name'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
           end
 
           click_on I18n.t('question.form.create_button')
 
-          within '.links' do
-            expect(page).to have_link('Link name', href: gist_url)
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
           end
         end
 
@@ -92,22 +92,22 @@ feature 'User can create question', %q{
           within '#new-links' do
             within first('.nested-fields') do
               fill_in I18n.t('links.name'), with: 'Link name'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
 
             click_on 'Add Link'
 
             within all('.nested-fields')[1] do
               fill_in I18n.t('links.name'), with: 'Link name second'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
           end
 
           click_on I18n.t('question.form.create_button')
 
-          within '.links' do
-            expect(page).to have_link('Link name', href: gist_url)
-            expect(page).to have_link('Link name second', href: gist_url)
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
+            expect(page).to have_link('Link name second', href: url)
           end
         end
 

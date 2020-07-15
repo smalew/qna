@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    question.links.build
     answer.links.build
   end
 

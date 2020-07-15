@@ -7,7 +7,7 @@
 
     .attachments
       = render answer.files
-    .links
+    .attached-links
       = render answer.links
 
     - if current_user&.author_of?(answer.question)
@@ -24,4 +24,7 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
+        #new-links
+          .links
+            = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
         = f.submit I18n.t('answer.form.save_button')

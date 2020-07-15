@@ -24,8 +24,14 @@ FactoryBot.define do
     end
 
     trait :with_link do
-      after do |answer|
+      before :create do |answer|
         create(:link, linkable: answer)
+      end
+    end
+
+    trait :with_links do
+      before :create do |question|
+        create_list(:link, 2,  linkable: question)
       end
     end
   end

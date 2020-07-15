@@ -70,7 +70,7 @@ feature 'User can create answer', %q{
     end
 
     context 'links', js: true do
-      given(:gist_url) { 'https://gist.github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
+      given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
 
       scenario 'with one link' do
         within '#new-answer' do
@@ -79,7 +79,7 @@ feature 'User can create answer', %q{
           within '#new-links' do
             within first('.nested-fields') do
               fill_in I18n.t('links.name'), with: 'Link name'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
           end
 
@@ -87,8 +87,8 @@ feature 'User can create answer', %q{
         end
 
         within '.answers' do
-          within '.links' do
-            expect(page).to have_link('Link name', href: gist_url)
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
           end
         end
       end
@@ -100,14 +100,14 @@ feature 'User can create answer', %q{
           within '#new-links' do
             within first('.nested-fields') do
               fill_in I18n.t('links.name'), with: 'Link name'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
 
             click_on 'Add Link'
 
             within all('.nested-fields')[1] do
               fill_in I18n.t('links.name'), with: 'Link name second'
-              fill_in I18n.t('links.url'), with: gist_url
+              fill_in I18n.t('links.url'), with: url
             end
           end
 
@@ -115,9 +115,9 @@ feature 'User can create answer', %q{
         end
 
         within '.answers' do
-          within '.links' do
-            expect(page).to have_link('Link name', href: gist_url)
-            expect(page).to have_link('Link name second', href: gist_url)
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
+            expect(page).to have_link('Link name second', href: url)
           end
         end
       end
@@ -136,7 +136,7 @@ feature 'User can create answer', %q{
           click_on I18n.t('answer.form.create_button')
         end
 
-        expect(page).to_not have_link('Link name', href: gist_url)
+        expect(page).to_not have_link('Link name', href: url)
         expect(page).to have_content("Links url is invalid")
       end
     end
