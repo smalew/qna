@@ -39,5 +39,14 @@ FactoryBot.define do
         create_list(:link, 2,  linkable: question)
       end
     end
+
+    trait :with_regard do
+      before :create do |question|
+        create(:regard,
+               question: question,
+               title: 'Regard title',
+               image: fixture_file_upload(Rails.root.join('spec', 'images', 'regard.jpg')))
+      end
+    end
   end
 end

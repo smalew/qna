@@ -1,0 +1,6 @@
+h1= I18n.t('regard.header')
+
+- @regards.each do |regard|
+  h2= regard.title
+  p= regard.question.title
+  img src="#{url_for(regard.image)}"/

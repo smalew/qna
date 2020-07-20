@@ -128,6 +128,51 @@ feature 'User can create question', %q{
           expect(page).to have_content("Links url is invalid")
         end
       end
+
+      context 'best answer regard' do
+        scenario 'with correct regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: 'Regard title'
+            attach_file 'Image', Rails.root.join('spec', 'images', 'regard.jpg')
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content(I18n.t('question.successful_create'))
+          expect(page).to have_content('Title question')
+          expect(page).to have_content('Body question')
+        end
+
+        scenario 'with empty title regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: ''
+            attach_file 'Image', Rails.root.join('spec', 'images', 'regard.jpg')
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content("Regard is invalid")
+        end
+
+        scenario 'with empty image regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: 'Regard title'
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content("Regard is invalid")
+        end
+      end
     end
   end
 

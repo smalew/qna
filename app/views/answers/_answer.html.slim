@@ -1,7 +1,12 @@
 - if answer.persisted?
   div id="answer-id-#{answer.id}"
     - if answer.best_answer?
-      div#best-answer= answer.body
+      #best-answer
+        = answer.body
+        - if answer.regard.present?
+          #best-answer-regard
+            = answer.regard.title
+            img src="#{url_for(answer.regard.image)}"/
     - else
       div= answer.body
 

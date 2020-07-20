@@ -30,6 +30,8 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  regard:
+    header: Your regards
   links:
     name: Link name
     url: Link url
