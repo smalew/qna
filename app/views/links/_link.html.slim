@@ -1,0 +1,12 @@
+- if link.persisted?
+  div id="link-id-#{link.id}"
+    - if link.gist?
+      - link.load_gist.files.each do |file_name, meta|
+        p
+          = file_name
+        p
+          = meta.content
+    - else
+      = link_to link.name, url_for(link.url)
+    - if current_user.author_of?(link.linkable)
+      = link_to I18n.t('links.delete'), link_path(link), method: :delete, remote: true

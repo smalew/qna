@@ -63,6 +63,116 @@ feature 'User can create question', %q{
         expect(page).to have_link('rails_helper.rb')
         expect(page).to have_link('spec_helper.rb')
       end
+
+      context 'links', js: true do
+        given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
+
+        scenario 'with one link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: url
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
+          end
+        end
+
+        scenario 'with several link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: url
+            end
+
+            click_on 'Add Link'
+
+            within all('.nested-fields')[1] do
+              fill_in I18n.t('links.name'), with: 'Link name second'
+              fill_in I18n.t('links.url'), with: url
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
+            expect(page).to have_link('Link name second', href: url)
+          end
+        end
+
+        scenario 'with incorrect link' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#new-links' do
+            within first('.nested-fields') do
+              fill_in I18n.t('links.name'), with: 'Link name'
+              fill_in I18n.t('links.url'), with: 'Incorrect Link'
+            end
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to_not have_link('Link name', href: 'incorrect link')
+          expect(page).to have_content("Links url is invalid")
+        end
+      end
+
+      context 'best answer regard' do
+        scenario 'with correct regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: 'Regard title'
+            attach_file 'Image', Rails.root.join('spec', 'images', 'regard.jpg')
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content(I18n.t('question.successful_create'))
+          expect(page).to have_content('Title question')
+          expect(page).to have_content('Body question')
+        end
+
+        scenario 'with empty title regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: ''
+            attach_file 'Image', Rails.root.join('spec', 'images', 'regard.jpg')
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content("Regard is invalid")
+        end
+
+        scenario 'with empty image regard' do
+          fill_in 'Title', with: 'Title question'
+          fill_in 'Body', with: 'Body question'
+
+          within '#best-answer-regard' do
+            fill_in :question_regard_attributes_title, with: 'Regard title'
+          end
+
+          click_on I18n.t('question.form.create_button')
+
+          expect(page).to have_content("Regard is invalid")
+        end
+      end
     end
   end
 

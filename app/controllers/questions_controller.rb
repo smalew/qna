@@ -5,14 +5,19 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    question.links.build
+    answer.links.build
   end
 
   def new
     @question = Question.new
+    @question.links.build
+    @question.build_regard
   end
 
   def create
     question.user = current_user
+
     if question.save
       redirect_to question, notice: I18n.t('question.successful_create')
     else
@@ -59,6 +64,9 @@ class QuestionsController < ApplicationController
   helper_method :answer
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body,
+                                     files: [],
+                                     regard_attributes: [:title, :image],
+                                     links_attributes: [:name, :url, :done, :_destroy])
   end
 end

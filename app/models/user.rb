@@ -10,4 +10,8 @@ class User < ApplicationRecord
   def author_of?(object)
     id == object.try(:user_id)
   end
+
+  def regards
+    answers.map(&:regard)
+  end
 end

@@ -12,6 +12,28 @@ feature 'User can choose best answer', %q{
 
     context 'question owner', js: true do
       context 'when only one answer' do
+        given(:question) { create(:question, :with_regard, user: user) }
+        given!(:answer) { create(:answer, question: question)}
+
+        scenario 'can choose best answer' do
+          visit question_path(question)
+
+          within '.answers' do
+            click_on I18n.t('answer.choose_as_best')
+
+            within '#best-answer' do
+              expect(page).to have_content(answer.body)
+
+              within '#best-answer-regard' do
+                expect(page).to have_content('Regard title')
+                expect(page).to have_css("img[src*='regard.jpg']")
+              end
+            end
+          end
+        end
+      end
+
+      context 'when only one answer and question without regard' do
         given(:question) { create(:question, user: user) }
         given!(:answer) { create(:answer, question: question)}
 
@@ -29,7 +51,7 @@ feature 'User can choose best answer', %q{
       end
 
       context 'when best answer already exist' do
-        given(:question) { create(:question, user: user) }
+        given(:question) { create(:question, :with_regard, user: user) }
         given!(:answer) { create(:answer, question: question, body: 'first answer', best_answer: true)}
         given!(:another_answer) { create(:answer, question: question, body: 'second answer')}
 
@@ -48,6 +70,11 @@ feature 'User can choose best answer', %q{
 
             within '#best-answer' do
               expect(page).to have_content(another_answer.body)
+
+              within '#best-answer-regard' do
+                expect(page).to have_content('Regard title')
+                expect(page).to have_css("img[src*='regard.jpg']")
+              end
             end
             expect(page).to have_content(answer.body)
           end

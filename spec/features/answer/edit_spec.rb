@@ -11,6 +11,7 @@ feature 'User can edit answer', %q{
     given(:user) { create(:user) }
     given!(:answer) { create(:answer, question: question, user: author) }
     given!(:another_answer) { create(:answer, question: question, user: author) }
+    given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
 
     background { sign_in(user) }
     background { visit question_path(question) }
@@ -101,6 +102,81 @@ feature 'User can edit answer', %q{
             end
           end
         end
+
+        scenario 'with one link' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              click_on I18n.t('answer.form.edit_button')
+              click_on 'Add Link'
+
+              within '#new-links' do
+                within first('.nested-fields') do
+                  fill_in I18n.t('links.name'), with: 'Link name'
+                  fill_in I18n.t('links.url'), with: url
+                end
+              end
+
+              click_on I18n.t('answer.form.save_button')
+            end
+          end
+
+          within '.answers' do
+            within '.attached-links' do
+              expect(page).to have_link('Link name', href: url)
+            end
+          end
+        end
+
+        scenario 'with several links' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              click_on I18n.t('answer.form.edit_button')
+              click_on 'Add Link'
+
+              within '#new-links' do
+                within first('.nested-fields') do
+                  fill_in I18n.t('links.name'), with: 'Link name'
+                  fill_in I18n.t('links.url'), with: url
+                end
+
+                click_on 'Add Link'
+
+                within all('.nested-fields')[1] do
+                  fill_in I18n.t('links.name'), with: 'Link name second'
+                  fill_in I18n.t('links.url'), with: url
+                end
+              end
+
+              click_on I18n.t('answer.form.save_button')
+            end
+          end
+
+          within '.attached-links' do
+            expect(page).to have_link('Link name', href: url)
+            expect(page).to have_link('Link name second', href: url)
+          end
+        end
+
+        scenario 'with incorrect link' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              click_on I18n.t('answer.form.edit_button')
+              click_on 'Add Link'
+
+              within '#new-links' do
+                within first('.nested-fields') do
+                  fill_in I18n.t('links.name'), with: 'Link name'
+                  fill_in I18n.t('links.url'), with: 'Incorrect link'
+                end
+              end
+
+              click_on I18n.t('answer.form.save_button')
+            end
+          end
+
+          expect(page).to_not have_link('Link name', href: url)
+          expect(page).to have_content("Links url is invalid")
+        end
       end
 
       context 'can delete attachment' do
@@ -145,14 +221,79 @@ feature 'User can edit answer', %q{
           end
         end
       end
+
+      context 'can delete link' do
+        given!(:answer) { create(:answer, :with_link, question: question, user: author) }
+        given(:link) { answer.links.first }
+
+        scenario 'attached link' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              within '.attached-links' do
+                expect(page).to have_content(link.name)
+
+                click_on I18n.t('links.delete')
+
+                expect(page).to_not have_content(link.name)
+              end
+            end
+          end
+        end
+      end
+
+      context 'can delete current link from several' do
+        given!(:answer) { create(:answer, :with_links, question: question, user: author) }
+        given(:link1) { answer.links.first }
+        given(:link2) { answer.links.last }
+
+        scenario 'attached link' do
+          within '.answers' do
+            within "#answer-id-#{answer.id}" do
+              within '.attached-links' do
+                expect(page).to have_content(link1.name)
+                expect(page).to have_content(link2.name)
+
+                within "#link-id-#{link1.id}" do
+                  click_on I18n.t('links.delete')
+                end
+
+                expect(page).to_not have_content(link1.name)
+                expect(page).to have_content(link2.name)
+              end
+            end
+          end
+        end
+      end
     end
 
     context "someone else's answer" do
+      given!(:answer) { create(:answer, :with_file, :with_link, question: question, user: author) }
+      given!(:another_answer) { create(:answer, :with_file, :with_link, question: question, user: author) }
       given(:author) { create(:user) }
 
       scenario 'edit answer to the question' do
         within '.answers' do
           expect(page).to_not have_link(I18n.t('answer.form.edit_button'))
+        end
+      end
+
+      scenario 'delete attachment' do
+        within '.answers' do
+          within "#answer-id-#{answer.id}" do
+            within '.attachments' do
+              expect(page).to_not have_link(I18n.t('delete_attachment'))
+            end
+          end
+        end
+      end
+
+      scenario 'delete link' do
+        within '.answers' do
+          within "#answer-id-#{answer.id}" do
+            within '.attached-links' do
+              expect(page).to_not have_link(I18n.t('links.delete'))
+            end
+          end
         end
       end
     end

@@ -12,6 +12,26 @@ RSpec.describe User, type: :model do
   end
 
   context 'methods' do
+    describe '#regards' do
+      let(:user) { create(:user) }
+
+      context 'without regards' do
+        it { expect(user.regards).to eq([]) }
+      end
+
+      context 'with regards' do
+        let(:answer) { create(:answer, user: user) }
+        let!(:regard) { create(:regard, answer: answer) }
+
+        it { expect(user.regards).to eq([regard]) }
+      end
+
+      context 'with answers without regards' do
+        let(:answer) { create(:answer, user: user) }
+
+        it { expect(user.regards).to eq([]) }
+      end
+    end
     describe '#author_of?' do
       let(:user) { create(:user) }
 

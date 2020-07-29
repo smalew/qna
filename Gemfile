@@ -16,6 +16,8 @@ gem 'slim-rails', '3.2.0'
 gem 'devise', '4.7.2'
 gem "twitter-bootstrap-rails"
 gem 'google-cloud-storage'
+gem "cocoon"
+gem "octokit", "~> 4.0"
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

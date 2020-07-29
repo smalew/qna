@@ -22,5 +22,17 @@ FactoryBot.define do
         question.files.attach fixture_file_upload(Rails.root.join('spec', 'spec_helper.rb'))
       end
     end
+
+    trait :with_link do
+      before :create do |answer|
+        create(:link, linkable: answer)
+      end
+    end
+
+    trait :with_links do
+      before :create do |question|
+        create_list(:link, 2,  linkable: question)
+      end
+    end
   end
 end

@@ -4,8 +4,12 @@ RSpec.describe Answer, type: :model do
   context 'associations' do
     it { should belong_to(:user) }
     it { should belong_to(:question) }
+    it { should have_one(:regard) }
+    it { should have_many(:links).dependent(:destroy) }
     it { should have_db_column(:question_id) }
     it { expect(build(:answer).files).to be_instance_of(ActiveStorage::Attached::Many) }
+
+    it { should accept_nested_attributes_for :links }
   end
 
   context 'scopes' do
@@ -60,12 +64,15 @@ RSpec.describe Answer, type: :model do
     describe '#choose_as_best' do
       let(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question) }
-      let!(:another_answer) { create(:answer, question: question, best_answer: true) }
+      let(:regard) { create(:regard, question: question) }
+      let!(:another_answer) { create(:answer, question: question, regard: regard, best_answer: true) }
 
       before { answer.choose_as_best }
 
       it { expect(answer.reload.best_answer).to be_truthy }
+      it { expect(answer.reload.regard).to eq(regard) }
       it { expect(another_answer.reload.best_answer).to be_falsey }
+      it { expect(another_answer.reload.regard).to be_nil }
     end
   end
 end

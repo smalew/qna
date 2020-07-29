@@ -1,12 +1,19 @@
 - if answer.persisted?
   div id="answer-id-#{answer.id}"
     - if answer.best_answer?
-      div#best-answer= answer.body
+      #best-answer
+        = answer.body
+        - if answer.regard.present?
+          #best-answer-regard
+            = answer.regard.title
+            img src="#{url_for(answer.regard.image)}"/
     - else
       div= answer.body
 
     .attachments
       = render answer.files
+    .attached-links
+      = render answer.links
 
     - if current_user&.author_of?(answer.question)
       = link_to I18n.t('answer.choose_as_best'), choose_as_best_answer_path(answer), method: :patch, remote: true
@@ -22,4 +29,7 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
+        #new-links
+          .links
+            = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
         = f.submit I18n.t('answer.form.save_button')
