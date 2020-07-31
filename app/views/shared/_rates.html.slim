@@ -1,0 +1,23 @@
+.rate-value
+  = resource.difference_in_rates
+
+- if user_signed_in? && !current_user&.author_of?(resource)
+  .rate-actions
+    = link_to I18n.t('rate.cancel'),
+            [:cancel_rate, resource],
+            method: :delete,
+            data: { type: :json },
+            class: "#{current_user&.rated?(resource) ? 'rate-cancel' : 'rate-cancel hidden'}",
+            remote: true
+    = link_to I18n.t('rate.up'),
+            [:rate_up, resource],
+            method: :patch,
+            data: { type: :json },
+            class: "#{!current_user&.rated?(resource) ? 'rate-up' : 'rate-up hidden'}",
+            remote: true
+    = link_to I18n.t('rate.down'),
+            [:rate_down, resource],
+            method: :patch,
+            data: { type: :json },
+            class: "#{!current_user&.rated?(resource) ? 'rate-down' : 'rate-down hidden'}",
+            remote: true

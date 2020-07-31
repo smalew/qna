@@ -4,8 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :questions, dependent: :destroy
-  has_many :answers, dependent: :destroy
+  include Answerable
+  include Questionable
+
+  has_many :rates, dependent: :destroy
 
   def author_of?(object)
     id == object.try(:user_id)
@@ -13,5 +15,9 @@ class User < ApplicationRecord
 
   def regards
     answers.map(&:regard)
+  end
+
+  def rated?(record)
+    rates.where(ratable: record).present?
   end
 end

@@ -30,6 +30,10 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  rate:
+    up: Up
+    down: Down
+    cancel: Cancel
   regard:
     header: Your regards
   links:

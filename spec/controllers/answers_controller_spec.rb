@@ -173,4 +173,6 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  include_examples 'rated_actions', :answer
 end

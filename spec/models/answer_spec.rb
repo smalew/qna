@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  context 'associations' do
-    it { should belong_to(:user) }
-    it { should belong_to(:question) }
-    it { should have_one(:regard) }
-    it { should have_many(:links).dependent(:destroy) }
-    it { should have_db_column(:question_id) }
-    it { expect(build(:answer).files).to be_instance_of(ActiveStorage::Attached::Many) }
+  it_behaves_like 'ratable'
 
-    it { should accept_nested_attributes_for :links }
+  context 'associations' do
+    it { should have_one(:regard) }
+
+    it_behaves_like 'has_user'
+    it_behaves_like 'has_question'
+    it_behaves_like 'filable'
+    it_behaves_like 'ratable'
+    it_behaves_like 'linkable'
   end
 
   context 'scopes' do
