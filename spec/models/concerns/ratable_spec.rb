@@ -23,25 +23,25 @@ shared_examples 'ratable' do
         end
 
         context 'with positive rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, positive: true) }
+          let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
           subject { record.rate_up_by!(user) }
 
           it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(rate.reload.positive).to be_truthy }
-          it { subject; expect(rate.reload.negative).to be_falsey }
+          it { subject; expect(rate.reload.positive?).to be_truthy }
+          it { subject; expect(rate.reload.negative?).to be_falsey }
         end
 
         context 'with negative rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, negative: true) }
+          let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
 
           subject { record.rate_up_by!(user) }
 
           it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(rate.reload.positive).to be_truthy }
-          it { subject; expect(rate.reload.negative).to be_falsey }
+          it { subject; expect(rate.reload.positive?).to be_truthy }
+          it { subject; expect(rate.reload.negative?).to be_falsey }
         end
       end
 
@@ -73,25 +73,25 @@ shared_examples 'ratable' do
         end
 
         context 'with positive rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, positive: true) }
+          let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
           subject { record.rate_down_by!(user) }
 
           it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(rate.reload.positive).to be_falsey }
-          it { subject; expect(rate.reload.negative).to be_truthy }
+          it { subject; expect(rate.reload.positive?).to be_falsey }
+          it { subject; expect(rate.reload.negative?).to be_truthy }
         end
 
         context 'with negative rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, negative: true) }
+          let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
 
           subject { record.rate_down_by!(user) }
 
           it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(rate.reload.positive).to be_falsey }
-          it { subject; expect(rate.reload.negative).to be_truthy }
+          it { subject; expect(rate.reload.positive?).to be_falsey }
+          it { subject; expect(rate.reload.negative?).to be_truthy }
         end
       end
 
@@ -122,7 +122,7 @@ shared_examples 'ratable' do
       end
 
       context 'with positive rate' do
-        let!(:rate) { create(:rate, ratable: record, user: user, positive: true) }
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
         subject { record.cancel_rate_for!(user) }
 
@@ -133,7 +133,7 @@ shared_examples 'ratable' do
       end
 
       context 'with negative rate' do
-        let!(:rate) { create(:rate, ratable: record, user: user, negative: true) }
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
 
         subject { record.rate_down_by!(user) }
 
@@ -150,15 +150,15 @@ shared_examples 'ratable' do
       let!(:record) { create(described_class.name.underscore.to_sym) }
 
       context 'when positives more than negatives' do
-        let!(:positive_rates) { create_list(:rate, 5, ratable: record, user: user, positive: true) }
-        let!(:negative_rates) { create_list(:rate, 3, ratable: record, user: user, negative: true) }
+        let!(:positive_rates) { create_list(:rate, 5, ratable: record, user: user, status: :positive) }
+        let!(:negative_rates) { create_list(:rate, 3, ratable: record, user: user, status: :negative) }
 
         it { expect(record.difference_in_rates).to eq(2) }
       end
 
       context 'when positives less than negatives' do
-        let!(:positive_rates) { create_list(:rate, 1, ratable: record, user: user, positive: true) }
-        let!(:negative_rates) { create_list(:rate, 4, ratable: record, user: user, negative: true) }
+        let!(:positive_rates) { create_list(:rate, 1, ratable: record, user: user, status: :positive) }
+        let!(:negative_rates) { create_list(:rate, 4, ratable: record, user: user, status: :negative) }
 
         it { expect(record.difference_in_rates).to eq(-3) }
       end

@@ -10,7 +10,7 @@ module Ratable
 
     rate = rates.find_or_initialize_by(user: user)
 
-    rate.update!(positive: true, negative: false)
+    rate.update!(status: :positive)
   end
 
   def rate_down_by!(user)
@@ -18,7 +18,7 @@ module Ratable
 
     rate = rates.find_or_initialize_by(user: user)
 
-    rate.update!(positive: false, negative: true)
+    rate.update!(status: :negative)
   end
 
   def cancel_rate_for!(user)
@@ -26,6 +26,6 @@ module Ratable
   end
 
   def difference_in_rates
-    rates.positives.count - rates.negatives.count
+    rates.sum(:status)
   end
 end

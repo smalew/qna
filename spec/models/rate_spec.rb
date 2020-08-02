@@ -6,6 +6,11 @@ RSpec.describe Rate, type: :model do
     it { should belong_to(:ratable) }
 
     it { should have_db_column(:ratable_id) }
+    it { should have_db_column(:user_id) }
+  end
+
+  context 'validations' do
+    it { should define_enum_for(:status).with_values(negative: -1, positive: 1).backed_by_column_of_type(:integer) }
   end
 
   context 'scopes' do
@@ -13,30 +18,30 @@ RSpec.describe Rate, type: :model do
       context 'when has no positives ' do
         let!(:rate) { create(:rate) }
 
-        it { expect(Rate.positives.count).to eq(0) }
+        it { expect(Rate.positive.count).to eq(0) }
       end
 
       context 'when positives present' do
-        let!(:rate) { create(:rate, positive: true) }
+        let!(:rate) { create(:rate, status: :positive) }
 
         it { expect(Rate.positives.count).to eq(1) }
-        it { expect(Rate.positives).to eq([rate]) }
+        it { expect(rate.positive?).to be_truthy }
       end
     end
   end
 
   describe '#negatives' do
     context 'when has no negatives' do
-      let!(:rate) { create(:rate) }
+      let!(:rate) { create(:rate, status: :positive) }
 
-      it { expect(Rate.negatives.count).to eq(0) }
+      it { expect(Rate.negative.count).to eq(0) }
     end
 
     context 'when positives present' do
-      let!(:rate) { create(:rate, negative: true) }
+      let!(:rate) { create(:rate, status: :negative) }
 
       it { expect(Rate.negatives.count).to eq(1) }
-      it { expect(Rate.negatives).to eq([rate]) }
+      it { expect(rate.negative?).to be_truthy }
     end
   end
 end

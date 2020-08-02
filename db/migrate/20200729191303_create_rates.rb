@@ -4,8 +4,7 @@ class CreateRates < ActiveRecord::Migration[6.0]
       t.belongs_to :user
       t.belongs_to :ratable, polymorphic: true
 
-      t.boolean :positive, null: false, default: false
-      t.boolean :negative, null: false, default: false
+      t.integer :status, null: false, default: 1
 
       t.timestamps
     end

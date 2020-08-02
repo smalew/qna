@@ -6,11 +6,11 @@ shared_examples 'rated_actions' do |record_name|
 
   describe '#PATCH rate_up' do
     shared_examples 'correct result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 1, negatives: 0, difference: 1 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: 1 }.to_json) }
     end
 
     shared_examples 'correct zero result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 0, negatives: 0, difference: 0 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: 0 }.to_json) }
     end
 
     context 'user is record owner' do
@@ -34,11 +34,11 @@ shared_examples 'rated_actions' do |record_name|
 
   describe '#PATCH rate_down' do
     shared_examples 'correct result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 0, negatives: 1, difference: -1 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: -1 }.to_json) }
     end
 
     shared_examples 'correct zero result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 0, negatives: 0, difference: 0 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: 0 }.to_json) }
     end
 
     context 'user is record owner' do
@@ -62,17 +62,17 @@ shared_examples 'rated_actions' do |record_name|
 
   describe '#PATCH cancel_rate' do
     shared_examples 'correct result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 1, negatives: 0, difference: 1 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: 1 }.to_json) }
     end
 
     shared_examples 'correct zero result' do
-      it { expect(response.body).to eq({ status: 200, record_id: record.id,  positives: 0, negatives: 0, difference: 0 }.to_json) }
+      it { expect(response.body).to eq({ record_id: record.id, difference: 0 }.to_json) }
     end
 
     context 'user is record owner' do
       before { login(user) }
       let!(:record) { create(record_name, user: user) }
-      let!(:rate) { create(:rate, ratable: record, user: another_user, positive: true)}
+      let!(:rate) { create(:rate, ratable: record, user: another_user, status: :positive) }
 
       before { patch :cancel_rate, params: { id: record, format: :json } }
 
@@ -82,7 +82,7 @@ shared_examples 'rated_actions' do |record_name|
     context 'user is not record owner' do
       before { login(user) }
       let!(:record) { create(record_name) }
-      let!(:rate) { create(:rate, ratable: record,  user: user, positive: true)}
+      let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
       before { patch :cancel_rate, params: { id: record, format: :json } }
 

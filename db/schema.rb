@@ -70,8 +70,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_191303) do
     t.bigint "user_id"
     t.string "ratable_type"
     t.bigint "ratable_id"
-    t.boolean "positive", default: false, null: false
-    t.boolean "negative", default: false, null: false
+    t.integer "status", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ratable_type", "ratable_id"], name: "index_rates_on_ratable_type_and_ratable_id"

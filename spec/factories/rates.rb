@@ -3,7 +3,6 @@ FactoryBot.define do
     user
     association :ratable, factory: :question
 
-    positive { false }
-    negative { false }
+    status { -1 }
   end
 end
