@@ -2,8 +2,10 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   context 'associations' do
-    it { should have_many(:questions).dependent(:destroy) }
-    it { should have_many(:answers).dependent(:destroy) }
+    it_behaves_like 'questionable'
+    it_behaves_like 'answerable'
+
+    it { should have_many(:rates).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -32,6 +34,7 @@ RSpec.describe User, type: :model do
         it { expect(user.regards).to eq([]) }
       end
     end
+
     describe '#author_of?' do
       let(:user) { create(:user) }
 
@@ -54,6 +57,25 @@ RSpec.describe User, type: :model do
         let(:object) { incorrect_struct.new(user.id) }
 
         it { expect(user).to_not be_author_of(object) }
+      end
+    end
+
+    describe '#rated?' do
+      let(:user) { create(:user) }
+
+      let(:question) { create(:question) }
+      let!(:rate) { create(:rate, ratable: question, user: author) }
+
+      context 'when question has been rated by user' do
+        let(:author) { user }
+
+        it { expect(user).to be_rated(question) }
+      end
+
+      context 'when question has not been rated by user' do
+        let(:author) { create(:user) }
+
+        it { expect(user).to_not be_rated(question) }
       end
     end
   end

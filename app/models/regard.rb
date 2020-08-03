@@ -1,8 +1,10 @@
 class Regard < ApplicationRecord
-  belongs_to :question
+  include HasQuestion
+  include Imagable
+
   belongs_to :answer, required: false
 
   has_one_attached :image
 
-  validates :title, :image, presence: true
+  validates :title, presence: true
 end

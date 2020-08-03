@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
-  context 'associations' do
-    it { should belong_to(:user) }
-    it { should have_one(:regard).dependent(:destroy) }
-    it { should have_many(:answers).dependent(:destroy) }
-    it { should have_many(:links).dependent(:destroy) }
-    it { expect(build(:question).files).to be_instance_of(ActiveStorage::Attached::Many) }
+  it_behaves_like 'ratable'
 
-    it { should accept_nested_attributes_for :links }
+  context 'associations' do
+    it { should have_one(:regard).dependent(:destroy) }
     it { should accept_nested_attributes_for :regard }
+
+    it_behaves_like 'has_user'
+    it_behaves_like 'answerable'
+    it_behaves_like 'filable'
+    it_behaves_like 'linkable'
   end
 
   context 'validations' do
