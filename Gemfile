@@ -18,6 +18,8 @@ gem "twitter-bootstrap-rails"
 gem 'google-cloud-storage'
 gem "cocoon"
 gem "octokit", "~> 4.0"
+gem 'redis', '4.2.1'
+gem 'gon', '6.3.2'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

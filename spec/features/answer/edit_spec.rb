@@ -25,18 +25,22 @@ feature 'User can edit answer', %q{
             within "#answer-id-#{answer.id}" do
               click_on I18n.t('answer.form.edit_button')
 
-              fill_in 'Body', with: 'New Answer body'
+              fill_in :new_answer_body, with: 'New Answer body'
 
               click_on I18n.t('answer.form.save_button')
 
               expect(page).to have_content('New Answer body')
               expect(page).to_not have_content(answer.body)
-              expect(page).to_not have_selector('textarea')
+              within '.new-answer' do
+                expect(page).to_not have_selector('textarea')
+              end
             end
 
             within "#answer-id-#{another_answer.id}" do
               expect(page).to_not have_content('New Answer body')
-              expect(page).to_not have_selector('textarea')
+              within '.new-answer' do
+                expect(page).to_not have_selector('textarea')
+              end
             end
           end
         end
@@ -46,7 +50,7 @@ feature 'User can edit answer', %q{
             within "#answer-id-#{answer.id}" do
               click_on I18n.t('answer.form.edit_button')
 
-              fill_in 'Body', with: ''
+              fill_in :new_answer_body, with: ''
 
               click_on I18n.t('answer.form.save_button')
 
@@ -65,7 +69,7 @@ feature 'User can edit answer', %q{
             within "#answer-id-#{answer.id}" do
               click_on I18n.t('answer.form.edit_button')
 
-              fill_in 'Body', with: 'New Answer body'
+              fill_in :new_answer_body, with: 'New Answer body'
               attach_file 'Files', Rails.root.join('spec', 'rails_helper.rb')
 
               click_on I18n.t('answer.form.save_button')
@@ -84,7 +88,7 @@ feature 'User can edit answer', %q{
             within "#answer-id-#{answer.id}" do
               click_on I18n.t('answer.form.edit_button')
 
-              fill_in 'Body', with: 'New Answer body'
+              fill_in :new_answer_body, with: 'New Answer body'
               attach_file 'Files', [
                 Rails.root.join('spec', 'rails_helper.rb'),
                 Rails.root.join('spec', 'spec_helper.rb'),

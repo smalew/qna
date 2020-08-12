@@ -1,11 +1,15 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
+  after_action :publish_answer, only: :create
+
   include Rated
+  include Commented
 
   def create
     answer.user = current_user
     answer.save
+    gon.answer_ids = answers.map(&:id) << answer.id if answer.errors.blank?
   end
 
   def update
@@ -31,6 +35,18 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    return if answer.errors.any?
+
+    AnswersChannel.broadcast_to(
+      'answers',
+      {
+        answer: answer,
+        template: render_to_string(partial: 'answers/answer', locals: { recourse: answer, current_user: nil })
+      }
+    )
+  end
 
   def question
     @question ||= Question.find(params[:question_id])

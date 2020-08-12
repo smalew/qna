@@ -10,23 +10,30 @@ p= question.body
 
 = render 'shared/rates', resource: question
 
+.comment-errors
+.comments
+  = render question.comments
+.new-comment
+  = render 'shared/new_comment', resource: question
+
 - if current_user&.author_of?(question)
   = link_to I18n.t('question.edit_button'), '#', class: 'edit-question-link'
   = link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
 
-  = form_with model: question, class: 'hidden', html: { id: 'edit-question' } do |f|
-    p
-      = f.label :title
-      = f.text_area :title
-    p
-      = f.label :body
-      = f.text_area :body
-    p
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-    #new-links
-      = f.fields_for :links do |link|
-        = render 'shared/link_fields', f: link
-      .links
-        = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
-    = f.submit I18n.t('question.save_button')
+  .edit-question
+    = form_with model: question, class: 'hidden', html: { id: 'edit-question' } do |f|
+      p
+        = f.label :title
+        = f.text_area :title, id: :question_title
+      p
+        = f.label :body
+        = f.text_area :body, id: :question_body
+      p
+        = f.label :files
+        = f.file_field :files, id: :question_files,  multiple: true, direct_upload: true
+      #new-links
+        = f.fields_for :links do |link|
+          = render 'shared/link_fields', f: link
+        .links
+          = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
+      = f.submit I18n.t('question.save_button')

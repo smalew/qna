@@ -1,21 +1,22 @@
-#question
+div id="question-#{question.id}"
   = render question
 
-.answers
-  = render answers
+div id="question-#{question.id}-answers"
+  .answers
+    = render answers
 
-.answer-errors
-#new-answer
-  = form_with model: [question, answer], class: 'new-answer' do |f|
-    p
-      = f.label :body
-      = f.text_area :body
-    p
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-    #new-links
-      = f.fields_for :links do |link|
-        = render 'shared/link_fields', f: link
-      .links
-        = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
-    = f.submit I18n.t('answer.form.create_button')
+  .answer-errors
+  #new-answer
+    = form_with model: [question, answer], class: 'new-answer' do |f|
+      p
+        = f.label :body
+        = f.text_area :body
+      p
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
+      #new-links
+        = f.fields_for :links do |link|
+          = render 'shared/link_fields', f: link
+        .links
+          = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
+      = f.submit I18n.t('answer.form.create_button')

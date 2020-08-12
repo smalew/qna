@@ -1,7 +1,10 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
+  after_action :publish_question, only: :create
+
   include Rated
+  include Commented
 
   def index
   end
@@ -9,6 +12,8 @@ class QuestionsController < ApplicationController
   def show
     question.links.build
     answer.links.build
+    gon.question_id = question.id
+    gon.answer_ids = answers.map(&:id)
   end
 
   def new
@@ -44,6 +49,12 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    return if question.errors.any?
+
+    QuestionsChannel.broadcast_to('questions', question)
+  end
 
   def questions
     @questions ||= Question.all

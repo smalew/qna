@@ -11,6 +11,7 @@ RSpec.describe Answer, type: :model do
     it_behaves_like 'filable'
     it_behaves_like 'ratable'
     it_behaves_like 'linkable'
+    it_behaves_like 'commentable'
   end
 
   context 'scopes' do

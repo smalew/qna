@@ -64,3 +64,5 @@ en:
       save_button: Save
       edit_button: Edit
   delete_attachment: Delete attachment
+  comments:
+    create: Create Comment
