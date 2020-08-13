@@ -13,7 +13,6 @@ class QuestionsController < ApplicationController
     question.links.build
     answer.links.build
     gon.question_id = question.id
-    gon.answer_ids = answers.map(&:id)
   end
 
   def new

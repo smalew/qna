@@ -18,7 +18,7 @@ module Commented
   def broadcast_comment
     return if comment.errors.any?
 
-    CommentsChannel.broadcast_to("comments_#{comment.commentable_type.underscore}_#{record.id}", comment)
+    CommentsChannel.broadcast_to("comments_#{question.id}", comment)
   end
 
   def record
