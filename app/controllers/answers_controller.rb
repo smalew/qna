@@ -1,7 +1,10 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
+  after_action :publish_answer, only: :create
+
   include Rated
+  include Commented
 
   def create
     answer.user = current_user
@@ -32,8 +35,20 @@ class AnswersController < ApplicationController
 
   private
 
+  def publish_answer
+    return if answer.errors.any?
+
+    AnswersChannel.broadcast_to(
+      "answers_#{question.id}",
+      {
+        answer: answer,
+        template: render_to_string(partial: 'answers/answer', locals: { recourse: answer, current_user: nil })
+      }
+    )
+  end
+
   def question
-    @question ||= Question.find(params[:question_id])
+    @question ||= Question.find_by(id: params[:question_id]) || answer.question
   end
 
   helper_method :question
@@ -45,7 +60,7 @@ class AnswersController < ApplicationController
   helper_method :answers
 
   def answer
-    @answer ||= params[:id].present? ? Answer.find(params[:id]) : answers.build(answer_params)
+    @answer ||= Answer.find_by(id: params[:id]) || answers.build(answer_params)
   end
 
   helper_method :answer

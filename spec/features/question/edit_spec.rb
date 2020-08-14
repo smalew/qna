@@ -21,9 +21,9 @@ feature 'User can edit question', %q{
         background { click_on I18n.t('question.edit_button') }
 
         scenario 'with correct params' do
-          within '#question' do
-            fill_in 'Title', with: 'New Question title'
-            fill_in 'Body', with: 'New Question body'
+          within "#question-#{question.id}" do
+            fill_in :question_title, with: 'New Question title'
+            fill_in :question_body, with: 'New Question body'
 
             click_on I18n.t('question.save_button')
 
@@ -31,15 +31,17 @@ feature 'User can edit question', %q{
             expect(page).to have_content('New Question body')
             expect(page).to_not have_content(question.title)
             expect(page).to_not have_content(question.body)
-            expect(page).to_not have_selector('textarea')
+            within '.edit-question' do
+              expect(page).to_not have_selector('textarea')
+            end
           end
         end
 
         scenario 'with attached file' do
-          within '#question' do
-            fill_in 'Title', with: 'New Question title'
-            fill_in 'Body', with: 'New Question body'
-            attach_file 'Files', Rails.root.join('spec', 'rails_helper.rb')
+          within "#question-#{question.id}" do
+            fill_in :question_title, with: 'New Question title'
+            fill_in :question_body, with: 'New Question body'
+            attach_file :question_files, Rails.root.join('spec', 'rails_helper.rb')
 
             click_on I18n.t('question.save_button')
 
@@ -48,10 +50,10 @@ feature 'User can edit question', %q{
         end
 
         scenario 'with several attached file' do
-          within '#question' do
-            fill_in 'Title', with: 'New Question title'
-            fill_in 'Body', with: 'New Question body'
-            attach_file 'Files', [
+          within "#question-#{question.id}" do
+            fill_in :question_title, with: 'New Question title'
+            fill_in :question_body, with: 'New Question body'
+            attach_file :question_files, [
               Rails.root.join('spec', 'rails_helper.rb'),
               Rails.root.join('spec', 'spec_helper.rb')
             ]
@@ -67,7 +69,7 @@ feature 'User can edit question', %q{
           given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
 
           scenario 'with one link' do
-            within '#question' do
+            within "#question-#{question.id}" do
               within '#new-links' do
                 within first('.nested-fields') do
                   fill_in I18n.t('links.name'), with: 'Link name'
@@ -78,7 +80,7 @@ feature 'User can edit question', %q{
 
             click_on I18n.t('question.save_button')
 
-            within '#question' do
+            within "#question-#{question.id}" do
               within '.attached-links' do
                 expect(page).to have_link('Link name', href: url)
               end
@@ -86,7 +88,7 @@ feature 'User can edit question', %q{
           end
 
           scenario 'with several link' do
-            within '#question' do
+            within "#question-#{question.id}" do
               within '#new-links' do
                 within first('.nested-fields') do
                   fill_in I18n.t('links.name'), with: 'Link name'
@@ -104,7 +106,7 @@ feature 'User can edit question', %q{
 
             click_on I18n.t('question.save_button')
 
-            within '#question' do
+            within "#question-#{question.id}" do
               within '.attached-links' do
                 expect(page).to have_link('Link name', href: url)
                 expect(page).to have_link('Link name second', href: url)
@@ -113,7 +115,7 @@ feature 'User can edit question', %q{
           end
 
           scenario 'with incorrect link' do
-            within '#question' do
+            within "#question-#{question.id}" do
               within '#new-links' do
                 within first('.nested-fields') do
                   fill_in I18n.t('links.name'), with: 'Link name'
@@ -134,9 +136,9 @@ feature 'User can edit question', %q{
         background { click_on I18n.t('question.edit_button') }
 
         scenario 'with empty title' do
-          within '#question' do
-            fill_in 'Title', with: ''
-            fill_in 'Body', with: 'New Question body'
+          within "#question-#{question.id}" do
+            fill_in :question_title, with: ''
+            fill_in :question_body, with: 'New Question body'
 
             click_on I18n.t('question.save_button')
 
@@ -150,9 +152,9 @@ feature 'User can edit question', %q{
         end
 
         scenario 'with empty body' do
-          within '#question' do
-            fill_in 'Title', with: 'New Question title'
-            fill_in 'Body', with: ''
+          within "#question-#{question.id}" do
+            fill_in :question_title, with: 'New Question title'
+            fill_in :question_body, with: ''
 
             click_on I18n.t('question.save_button')
 
@@ -170,7 +172,7 @@ feature 'User can edit question', %q{
         given!(:question) { create(:question, :with_file, user: user) }
 
         scenario 'attached file' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.attachments' do
               expect(page).to have_content(question.files.first.filename)
 
@@ -188,7 +190,7 @@ feature 'User can edit question', %q{
         given(:attachment2) { question.files.last }
 
         scenario 'attached file' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.attachments' do
               expect(page).to have_content(attachment1.filename)
               expect(page).to have_content(attachment2.filename)
@@ -210,7 +212,7 @@ feature 'User can edit question', %q{
       given(:link_name) { question.links.first.name }
 
       scenario 'attached link' do
-        within '#question' do
+        within "#question-#{question.id}" do
           within '.attached-links' do
             expect(page).to have_content(link_name)
 
@@ -228,7 +230,7 @@ feature 'User can edit question', %q{
       given(:link2) { question.links.last }
 
       scenario 'attached file', js: true do
-        within '#question' do
+        within "#question-#{question.id}" do
           within '.attached-links' do
             expect(page).to have_content(link1.name)
             expect(page).to have_content(link2.name)
@@ -248,7 +250,7 @@ feature 'User can edit question', %q{
       given(:author) { create(:user) }
 
       scenario 'can not be edited' do
-        within '#question' do
+        within "#question-#{question.id}" do
           expect(page).to_not have_link(I18n.t('question.edit_button'))
         end
       end
@@ -257,7 +259,7 @@ feature 'User can edit question', %q{
         given!(:question) { create(:question, :with_file, :with_link, user: author) }
 
         scenario 'attached file' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.attachments' do
               expect(page).to_not have_link(I18n.t('delete_attachment'))
             end
@@ -265,7 +267,7 @@ feature 'User can edit question', %q{
         end
 
         scenario 'link' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.attached-links' do
               expect(page).to_not have_link(I18n.t('links.delete'))
             end
@@ -279,7 +281,7 @@ feature 'User can edit question', %q{
     background { visit question_path(question) }
 
     scenario 'can not be edited' do
-      within '#question' do
+      within "#question-#{question.id}" do
         expect(page).to_not have_link(I18n.t('question.edit_button'))
       end
     end

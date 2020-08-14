@@ -17,6 +17,12 @@
 
     = render 'shared/rates', resource: answer
 
+    .comment-errors
+    .comments
+      = render answer.comments
+    .new-comment
+      = render 'shared/new_comment', resource: answer
+
     - if current_user&.author_of?(answer.question)
       = link_to I18n.t('answer.choose_as_best'), choose_as_best_answer_path(answer), method: :patch, remote: true
     - if current_user&.author_of?(answer)
@@ -24,14 +30,15 @@
       = link_to I18n.t('answer.destroy_button'), answer_path(answer), method: :delete, remote: true
 
       .answer-errors
-      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-        p
-          = f.label :body
-          = f.text_area :body
-        p
-          = f.label :files
-          = f.file_field :files, multiple: true, direct_upload: true
-        #new-links
-          .links
-            = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
-        = f.submit I18n.t('answer.form.save_button')
+      .new-answer
+        = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+          p
+            = f.label :body
+            = f.text_area :body, id: :new_answer_body
+          p
+            = f.label :files
+            = f.file_field :files, multiple: true, direct_upload: true
+          #new-links
+            .links
+              = link_to_add_association I18n.t('links.add'), f, :links, partial: 'shared/link_fields'
+          = f.submit I18n.t('answer.form.save_button')

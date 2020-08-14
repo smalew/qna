@@ -5,6 +5,7 @@ class Answer < ApplicationRecord
   include Linkable
   include Ratable
   include Filable
+  include Commentable
 
   has_one :regard
 

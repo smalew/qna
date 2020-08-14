@@ -8,5 +8,5 @@
           = meta.content
     - else
       = link_to link.name, url_for(link.url)
-    - if current_user.author_of?(link.linkable)
+    - if current_user&.author_of?(link.linkable)
       = link_to I18n.t('links.delete'), link_path(link), method: :delete, remote: true

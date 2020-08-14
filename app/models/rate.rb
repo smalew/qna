@@ -1,5 +1,5 @@
 class Rate < ApplicationRecord
-  belongs_to :user
+  include HasUser
   belongs_to :ratable, polymorphic: true
 
   enum status: { negative: -1, positive: 1 }

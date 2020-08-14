@@ -17,7 +17,7 @@ feature 'User can rate up question', %q{
       given(:author) { create(:user) }
 
       scenario 'can rate up' do
-        within '#question' do
+        within "#question-#{question.id}" do
           within '.rate-actions' do
             expect(page).to have_link(I18n.t('rate.up'))
             expect(page).to have_link(I18n.t('rate.down'))
@@ -36,7 +36,7 @@ feature 'User can rate up question', %q{
       end
 
       scenario 'can rate down' do
-        within '#question' do
+        within "#question-#{question.id}" do
           within '.rate-actions' do
             expect(page).to have_link(I18n.t('rate.up'))
             expect(page).to have_link(I18n.t('rate.down'))
@@ -60,7 +60,7 @@ feature 'User can rate up question', %q{
         background { visit question_path(question) }
 
         scenario 'can cancel rate for' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.rate-actions' do
               expect(page).to_not have_link(I18n.t('rate.up'))
               expect(page).to_not have_link(I18n.t('rate.down'))
@@ -84,7 +84,7 @@ feature 'User can rate up question', %q{
         background { visit question_path(question) }
 
         scenario 'can cancel rate for' do
-          within '#question' do
+          within "#question-#{question.id}" do
             within '.rate-actions' do
               expect(page).to have_link(I18n.t('rate.up'))
               expect(page).to have_link(I18n.t('rate.down'))
@@ -103,7 +103,7 @@ feature 'User can rate up question', %q{
       given(:author) { user }
 
       scenario 'can not rate' do
-        within '#question' do
+        within "#question-#{question.id}" do
           expect(page).to_not have_css('.rate-actions')
 
           within '.rate-value' do
@@ -120,7 +120,7 @@ feature 'User can rate up question', %q{
     background { visit question_path(question) }
 
     scenario 'can not rates' do
-      within '#question' do
+      within "#question-#{question.id}" do
         expect(page).to_not have_css('.rate-actions')
 
         within '.rate-value' do

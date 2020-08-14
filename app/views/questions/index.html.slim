@@ -1,7 +1,8 @@
 h1= I18n.t('question.header')
 
-- questions.each do |question|
-  h2= link_to question.title, question_path(question)
-  p= question.body
+.questions
+  - questions.each do |question|
+    h2= link_to question.title, question_path(question)
+    p= question.body
 
 = link_to I18n.t('question.new_button'), new_question_path
