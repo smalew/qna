@@ -3,12 +3,8 @@ module OauthServices
     def call
       return authorization.user if authorization.present?
 
-      if user.present?
-        create_authorization
-      else
-        create_user
-        create_authorization
-      end
+      user || create_user
+      create_authorization
 
       user
     end

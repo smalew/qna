@@ -3,8 +3,7 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
 
   def github
     if user&.persisted?
-      sign_in_and_redirect user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'GitHUb') if is_navigational_format?
+      authorize_user_by('GitHUb')
     else
       redirect_to root_path
     end
@@ -12,8 +11,7 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
 
   def twitter
     if user.present?
-      sign_in_and_redirect user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'Twitter') if is_navigational_format?
+      authorize_user_by('Twitter')
     else
       session['omniauth.auth'] = oauth_params
       redirect_to new_user_confirmation_path
@@ -32,12 +30,13 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-    def user
-      @user ||= User.find_for_oauth(oauth_params)
+    def authorize_user_by(provider)
+      sign_in_and_redirect user, event: :authentication
+      set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
     end
 
-    def prepare_authorization
-      Authorization.create(provider: oauth_params.provider, uid: oauth_params.uid.to_s)
+    def user
+      @user ||= User.find_for_oauth(oauth_params)
     end
 
     def oauth_params
