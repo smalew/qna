@@ -13,9 +13,9 @@ class User < ApplicationRecord
   def self.find_for_oauth(auth)
     case auth.provider
     when 'github'
-      OauthServices::GithubService.call(auth)
+      OauthServices::GithubService.new.call(uid: auth.uid, email: auth.info[:email])
     when 'twitter'
-      OauthServices::TwitterService.call(auth)
+      OauthServices::TwitterService.new.call(uid: auth.uid)
     end
   end
 

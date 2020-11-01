@@ -20,12 +20,12 @@ RSpec.describe User, type: :model do
 
       context 'for providers' do
         context 'github' do
-          let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456') }
+          let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { email: 'test@mail.com' }) }
           let(:service) { double('FindForOauthService') }
 
           it 'calls FindForOauthService' do
-            expect(OauthServices::GithubService).to receive(:new).with(auth).and_return(service)
-            expect(service).to receive(:call)
+            expect(OauthServices::GithubService).to receive(:new).and_return(service)
+            expect(service).to receive(:call).with(uid: auth.uid, email: 'test@mail.com')
             User.find_for_oauth(auth)
           end
         end
@@ -35,8 +35,8 @@ RSpec.describe User, type: :model do
           let(:service) { double('FindForOauthService') }
 
           it 'calls FindForOauthService' do
-            expect(OauthServices::TwitterService).to receive(:new).with(auth).and_return(service)
-            expect(service).to receive(:call)
+            expect(OauthServices::TwitterService).to receive(:new).and_return(service)
+            expect(service).to receive(:call).with(uid: auth.uid)
             User.find_for_oauth(auth)
           end
         end

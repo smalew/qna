@@ -4,9 +4,11 @@ RSpec.describe OauthServices::GithubService do
   let!(:user) { create(:user) }
   let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456') }
 
-  subject { OauthServices::GithubService.call(auth) }
+  subject { OauthServices::GithubService.new.call(uid: auth.uid, email: email) }
 
   context 'user already has authorization' do
+    let(:email) { user.email }
+
     it 'returns the user' do
       user.authorizations.create(provider: 'github', uid: '123456')
 
@@ -17,6 +19,7 @@ RSpec.describe OauthServices::GithubService do
   context 'user has not authorization' do
     context 'user already exists' do
       let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { email: user.email }) }
+      let(:email) { user.email }
 
       it 'does not create new user' do
         expect { subject }.to_not change(User, :count)
@@ -41,6 +44,7 @@ RSpec.describe OauthServices::GithubService do
 
   context 'user does not exist' do
     let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { email: 'new@user.com' }) }
+    let(:email) { 'new@user.com' }
 
     it 'creates new user' do
       expect { subject }.to change(User, :count).by(1)

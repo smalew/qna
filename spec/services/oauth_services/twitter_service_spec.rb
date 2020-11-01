@@ -4,7 +4,7 @@ RSpec.describe OauthServices::TwitterService do
   let!(:user) { create(:user) }
   let(:auth) { OmniAuth::AuthHash.new(provider: 'twitter', uid: '123456') }
 
-  subject { OauthServices::TwitterService.call(auth) }
+  subject { OauthServices::TwitterService.new.call(uid: auth.uid) }
 
   context 'user already has authorization' do
     it 'returns the user' do
