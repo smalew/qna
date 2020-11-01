@@ -6,6 +6,7 @@ RSpec.describe User, type: :model do
     it_behaves_like 'answerable'
 
     it { should have_many(:rates).dependent(:destroy) }
+    it { should have_many(:authorizations).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -14,6 +15,34 @@ RSpec.describe User, type: :model do
   end
 
   context 'methods' do
+    describe 'from_omniauth' do
+      let!(:user) { create(:user) }
+
+      context 'for providers' do
+        context 'github' do
+          let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456', info: { email: 'test@mail.com' }) }
+          let(:service) { double('FindForOauthService') }
+
+          it 'calls FindForOauthService' do
+            expect(OauthServices::GithubService).to receive(:new).and_return(service)
+            expect(service).to receive(:call).with(uid: auth.uid, email: 'test@mail.com')
+            User.find_for_oauth(auth)
+          end
+        end
+
+        context 'twitter' do
+          let(:auth) { OmniAuth::AuthHash.new(provider: 'twitter', uid: '123456') }
+          let(:service) { double('FindForOauthService') }
+
+          it 'calls FindForOauthService' do
+            expect(OauthServices::TwitterService).to receive(:new).and_return(service)
+            expect(service).to receive(:call).with(uid: auth.uid)
+            User.find_for_oauth(auth)
+          end
+        end
+      end
+    end
+
     describe '#regards' do
       let(:user) { create(:user) }
 
@@ -76,6 +105,28 @@ RSpec.describe User, type: :model do
         let(:author) { create(:user) }
 
         it { expect(user).to_not be_rated(question) }
+      end
+    end
+
+    describe '#confirmation_required?' do
+      let!(:user) { create(:user) }
+
+      subject { user.confirmation_required? }
+
+      context 'when user auth through twitter' do
+        let!(:auth) { create(:authorization, provider: 'twitter', user: user) }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when user auth through another provider' do
+        let!(:auth) { create(:authorization, provider: 'some_provider', user: user) }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when user without any auth' do
+        it { is_expected.to be_falsey }
       end
     end
   end

@@ -21,6 +21,9 @@ gem "octokit", "~> 4.0"
 gem 'redis', '4.2.1'
 gem 'gon', '6.3.2'
 
+gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
+gem 'omniauth-twitter', '1.4.0'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
@@ -38,6 +41,7 @@ end
 
 group :test do
   gem 'capybara', '>= 2.15'
+  gem 'capybara-email', '3.0.2'
   gem 'selenium-webdriver'
   gem 'webdrivers'
   gem 'shoulda-matchers', '~> 4.0'
