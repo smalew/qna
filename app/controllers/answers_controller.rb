@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: :create
 
+  authorize_resource
+
   include Rated
   include Commented
 

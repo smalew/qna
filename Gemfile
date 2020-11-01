@@ -24,6 +24,8 @@ gem 'gon', '6.3.2'
 gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
 gem 'omniauth-twitter', '1.4.0'
 
+gem 'cancancan', '3.1.0'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 

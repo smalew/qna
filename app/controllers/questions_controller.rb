@@ -3,6 +3,8 @@ class QuestionsController < ApplicationController
 
   after_action :publish_question, only: :create
 
+  authorize_resource
+
   include Rated
   include Commented
 
@@ -32,7 +34,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(question)
+    if can? :update, question
       question.update(question_params)
     else
       render :show
@@ -40,7 +42,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(question) && question.destroy
+    if can?(:destroy, question) && question.destroy
       redirect_to questions_path, notice: I18n.t('question.successful_destroy')
     else
       redirect_to questions_path, alert: I18n.t('question.failure_destroy')
