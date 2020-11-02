@@ -19,11 +19,6 @@ class User < ApplicationRecord
     end
   end
 
-  def ability
-    @ability ||= Ability.new(self)
-  end
-  delegate :can?, :cannot?, to: :ability
-
   def author_of?(object)
     id == object.try(:user_id)
   end

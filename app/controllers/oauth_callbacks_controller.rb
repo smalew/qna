@@ -1,6 +1,4 @@
 class OauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_authorization_check only: %i[github twitter failure]
-
   skip_before_action :verify_authenticity_token, only: :github
 
   def github

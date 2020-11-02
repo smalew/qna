@@ -10,102 +10,72 @@ shared_examples 'ratable' do
     let!(:record) { create(described_class.name.underscore.to_sym, user: author) }
 
     describe '#rate_up_by!' do
-      context 'when user is not owner' do
-        let(:author) { create(:user) }
+      let(:author) { create(:user) }
 
-        context 'without rates' do
-          subject { record.rate_up_by!(user) }
+      context 'without rates' do
+        subject { record.rate_up_by!(user) }
 
-          it { expect { subject }.to change(Rate, :count).by(1) }
+        it { expect { subject }.to change(Rate, :count).by(1) }
 
-          it { subject; expect(record.reload.rates.positives.count).to eq(1) }
-          it { subject; expect(record.reload.rates.negatives.count).to eq(0) }
-        end
-
-        context 'with positive rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
-
-          subject { record.rate_up_by!(user) }
-
-          it { expect { subject }.to_not change(Rate, :count) }
-
-          it { subject; expect(rate.reload.positive?).to be_truthy }
-          it { subject; expect(rate.reload.negative?).to be_falsey }
-        end
-
-        context 'with negative rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
-
-          subject { record.rate_up_by!(user) }
-
-          it { expect { subject }.to_not change(Rate, :count) }
-
-          it { subject; expect(rate.reload.positive?).to be_truthy }
-          it { subject; expect(rate.reload.negative?).to be_falsey }
-        end
+        it { subject; expect(record.reload.rates.positives.count).to eq(1) }
+        it { subject; expect(record.reload.rates.negatives.count).to eq(0) }
       end
 
-      context 'when user is owner' do
-        let(:author) { user }
+      context 'with positive rate' do
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
-        context 'without rates' do
-          subject { record.rate_up_by!(user) }
+        subject { record.rate_up_by!(user) }
 
-          it { expect { subject }.to change(Rate, :count).by(0) }
+        it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(record.reload.rates.positives.count).to eq(0) }
-          it { subject; expect(record.reload.rates.negatives.count).to eq(0) }
-        end
+        it { subject; expect(rate.reload.positive?).to be_truthy }
+        it { subject; expect(rate.reload.negative?).to be_falsey }
+      end
+
+      context 'with negative rate' do
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
+
+        subject { record.rate_up_by!(user) }
+
+        it { expect { subject }.to_not change(Rate, :count) }
+
+        it { subject; expect(rate.reload.positive?).to be_truthy }
+        it { subject; expect(rate.reload.negative?).to be_falsey }
       end
     end
 
     describe '#rate_down_by!' do
-      context 'when user is not owner' do
-        let(:author) { create(:user) }
+      let(:author) { create(:user) }
 
-        context 'without rates' do
-          subject { record.rate_down_by!(user) }
+      context 'without rates' do
+        subject { record.rate_down_by!(user) }
 
-          it { expect { subject }.to change(Rate, :count).by(1) }
+        it { expect { subject }.to change(Rate, :count).by(1) }
 
-          it { subject; expect(record.reload.rates.positives.count).to eq(0) }
-          it { subject; expect(record.reload.rates.negatives.count).to eq(1) }
-        end
-
-        context 'with positive rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
-
-          subject { record.rate_down_by!(user) }
-
-          it { expect { subject }.to_not change(Rate, :count) }
-
-          it { subject; expect(rate.reload.positive?).to be_falsey }
-          it { subject; expect(rate.reload.negative?).to be_truthy }
-        end
-
-        context 'with negative rate' do
-          let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
-
-          subject { record.rate_down_by!(user) }
-
-          it { expect { subject }.to_not change(Rate, :count) }
-
-          it { subject; expect(rate.reload.positive?).to be_falsey }
-          it { subject; expect(rate.reload.negative?).to be_truthy }
-        end
+        it { subject; expect(record.reload.rates.positives.count).to eq(0) }
+        it { subject; expect(record.reload.rates.negatives.count).to eq(1) }
       end
 
-      context 'when user is owner' do
-        let(:author) { user }
+      context 'with positive rate' do
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :positive) }
 
-        context 'without rates' do
-          subject { record.rate_down_by!(user) }
+        subject { record.rate_down_by!(user) }
 
-          it { expect { subject }.to change(Rate, :count).by(0) }
+        it { expect { subject }.to_not change(Rate, :count) }
 
-          it { subject; expect(record.reload.rates.positives.count).to eq(0) }
-          it { subject; expect(record.reload.rates.negatives.count).to eq(0) }
-        end
+        it { subject; expect(rate.reload.positive?).to be_falsey }
+        it { subject; expect(rate.reload.negative?).to be_truthy }
+      end
+
+      context 'with negative rate' do
+        let!(:rate) { create(:rate, ratable: record, user: user, status: :negative) }
+
+        subject { record.rate_down_by!(user) }
+
+        it { expect { subject }.to_not change(Rate, :count) }
+
+        it { subject; expect(rate.reload.positive?).to be_falsey }
+        it { subject; expect(rate.reload.negative?).to be_truthy }
       end
     end
 
