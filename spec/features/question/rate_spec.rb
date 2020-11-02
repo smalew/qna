@@ -30,7 +30,7 @@ feature 'User can rate up question', %q{
           end
 
           within '.rate-value' do
-            expect(page).to have_content(question.reload.difference_in_rates)
+            expect(page).to have_content('1')
           end
         end
       end
@@ -49,7 +49,7 @@ feature 'User can rate up question', %q{
           end
 
           within '.rate-value' do
-            expect(page).to have_content(question.reload.difference_in_rates)
+            expect(page).to have_content('-1')
           end
         end
       end
@@ -72,7 +72,7 @@ feature 'User can rate up question', %q{
             end
 
             within '.rate-value' do
-              expect(page).to have_content(question.reload.difference_in_rates)
+              expect(page).to have_content('0')
             end
           end
         end
@@ -92,7 +92,7 @@ feature 'User can rate up question', %q{
             end
 
             within '.rate-value' do
-              expect(page).to have_content(question.reload.difference_in_rates)
+              expect(page).to have_content('-1')
             end
           end
         end
@@ -107,7 +107,7 @@ feature 'User can rate up question', %q{
           expect(page).to_not have_css('.rate-actions')
 
           within '.rate-value' do
-            expect(page).to have_content(question.reload.difference_in_rates)
+            expect(page).to have_content('0')
           end
         end
       end
@@ -124,7 +124,7 @@ feature 'User can rate up question', %q{
         expect(page).to_not have_css('.rate-actions')
 
         within '.rate-value' do
-          expect(page).to have_content(question.reload.difference_in_rates)
+          expect(page).to have_content('0')
         end
       end
     end

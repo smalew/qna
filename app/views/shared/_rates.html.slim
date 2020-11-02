@@ -1,5 +1,5 @@
 .rate-value
-  = resource.difference_in_rates
+  = resource.rates.sum(:status)
 
 - if user_signed_in?
   .rate-actions

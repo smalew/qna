@@ -2,19 +2,19 @@ module Rated
   extend ActiveSupport::Concern
 
   def rate_up
-    record.rate_up_by!(current_user) if can?(:rate_up, record)
+    rate.update!(status: :positive) if can?(:rate_up, record)
 
     success_responce
   end
 
   def rate_down
-    record.rate_down_by!(current_user) if can?(:rate_down, record)
+    rate.update!(status: :negative) if can?(:rate_down, record)
 
     success_responce
   end
 
   def cancel_rate
-    record.cancel_rate_for!(current_user) if can?(:cancel_rate, record)
+    record.rates.find_by(user: current_user)&.destroy if can?(:cancel_rate, record)
 
     success_responce
   end
@@ -25,7 +25,11 @@ module Rated
     send(controller_name.singularize.underscore)
   end
 
+  def rate
+    @rate ||= record.rates.find_or_initialize_by(user: current_user)
+  end
+
   def success_responce
-    render json: { record_id: record.id, difference: record.difference_in_rates }
+    render json: { record_id: record.id, difference: record.rates.sum(:status) }
   end
 end

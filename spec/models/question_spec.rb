@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
-  it_behaves_like 'ratable'
-
   context 'associations' do
     it { should have_one(:regard).dependent(:destroy) }
     it { should accept_nested_attributes_for :regard }

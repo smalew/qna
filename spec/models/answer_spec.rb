@@ -1,15 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  it_behaves_like 'ratable'
-
   context 'associations' do
     it { should have_one(:regard) }
 
     it_behaves_like 'has_user'
     it_behaves_like 'has_question'
     it_behaves_like 'filable'
-    it_behaves_like 'ratable'
     it_behaves_like 'linkable'
     it_behaves_like 'commentable'
   end
