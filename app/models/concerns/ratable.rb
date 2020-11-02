@@ -6,7 +6,7 @@ module Ratable
   end
 
   def rate_up_by!(user)
-    return if user.author_of?(self)
+    return if user.cannot?(:rate_up, self)
 
     rate = rates.find_or_initialize_by(user: user)
 
@@ -14,7 +14,7 @@ module Ratable
   end
 
   def rate_down_by!(user)
-    return if user.author_of?(self)
+    return if user.cannot?(:rate_down, self)
 
     rate = rates.find_or_initialize_by(user: user)
 
@@ -22,6 +22,8 @@ module Ratable
   end
 
   def cancel_rate_for!(user)
+    return if user.cannot?(:cancel_rate, self)
+
     rates.find_by(user: user)&.destroy
   end
 

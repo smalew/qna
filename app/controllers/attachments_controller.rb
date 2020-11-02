@@ -4,7 +4,7 @@ class AttachmentsController < ApplicationController
   authorize_resource class: ActiveStorage::Attachment
 
   def destroy
-    if current_user.author_of?(attachment.record)
+    if can?(:destroy, attachment)
       attachment.purge
     else
       render 'questions/show'

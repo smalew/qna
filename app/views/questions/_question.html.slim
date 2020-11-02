@@ -16,8 +16,9 @@ p= question.body
 .new-comment
   = render 'shared/new_comment', resource: question
 
-- if current_user&.author_of?(question)
+- if can?(:edit, question)
   = link_to I18n.t('question.edit_button'), '#', class: 'edit-question-link'
+- if can?(:destroy, question)
   = link_to I18n.t('question.destroy_button'), question_path(question), method: :delete
 
   .edit-question
