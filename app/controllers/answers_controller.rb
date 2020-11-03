@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: :create
 
+  authorize_resource
+
   include Rated
   include Commented
 
@@ -12,7 +14,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(answer)
+    if can?(:update, answer)
       answer.update(answer_params)
     else
       render 'questions/show'
@@ -20,7 +22,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(answer)
+    if can?(:destroy, answer)
       answer.destroy
     else
       render 'questions/show'
@@ -30,7 +32,7 @@ class AnswersController < ApplicationController
   def choose_as_best
     @question = answer.question
 
-    answer.choose_as_best if current_user.author_of?(@question)
+    answer.choose_as_best if can?(:choose_as_best, answer)
   end
 
   private

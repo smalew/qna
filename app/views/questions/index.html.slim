@@ -5,4 +5,5 @@ h1= I18n.t('question.header')
     h2= link_to question.title, question_path(question)
     p= question.body
 
-= link_to I18n.t('question.new_button'), new_question_path
+- if can?(:create, Question)
+  = link_to I18n.t('question.new_button'), new_question_path

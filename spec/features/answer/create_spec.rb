@@ -143,13 +143,11 @@ feature 'User can create answer', %q{
   end
 
   describe 'Unauthenticated user' do
-    scenario 'ask question' do
+    scenario 'ask answer' do
       visit question_path(question)
 
-      fill_in 'Body', with: 'Answer body'
-      click_on I18n.t('answer.form.create_button')
-
-      expect(page).to have_content(I18n.t('devise.failure.unauthenticated'))
+      expect(page).to_not have_content('Answer body')
+      expect(page).to_not have_content(I18n.t('answer.form.create_button'))
     end
   end
 end

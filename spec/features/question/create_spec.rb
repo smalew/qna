@@ -180,9 +180,7 @@ feature 'User can create question', %q{
     background { visit questions_path }
 
     scenario 'ask question' do
-      click_on I18n.t('question.new_button')
-
-      expect(page).to have_content(I18n.t('devise.failure.unauthenticated'))
+      expect(page).to_not have_content(I18n.t('question.new_button'))
     end
   end
 end

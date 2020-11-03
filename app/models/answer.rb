@@ -3,11 +3,11 @@ class Answer < ApplicationRecord
   include HasQuestion
 
   include Linkable
-  include Ratable
   include Filable
   include Commentable
 
   has_one :regard
+  has_many :rates, as: :ratable, dependent: :destroy
 
   scope :casual, -> { where(best_answer: false) }
   scope :best, -> { where(best_answer: true) }
