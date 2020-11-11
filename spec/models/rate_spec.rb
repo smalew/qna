@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: rates
+#
+#  id           :bigint           not null, primary key
+#  user_id      :bigint
+#  ratable_type :string
+#  ratable_id   :bigint
+#  status       :integer          default("positive"), not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Rate, type: :model do

@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: links
+#
+#  id            :bigint           not null, primary key
+#  name          :string
+#  url           :string
+#  linkable_type :string
+#  linkable_id   :bigint
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
 class Link < ApplicationRecord
   belongs_to :linkable, polymorphic: true
 
