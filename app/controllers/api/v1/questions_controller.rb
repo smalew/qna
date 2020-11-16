@@ -13,14 +13,6 @@ module Api
           @question ||= params[:id].present? ? Question.find(params[:id]) : Question.new(record_params)
         end
 
-        def records_serializer
-          QuestionsSerializer
-        end
-
-        def record_serializer
-          QuestionSerializer
-        end
-
         def record_params
           params.require(:question).permit(:title, :body, links_attributes: [:name, :url])
         end

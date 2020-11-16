@@ -5,11 +5,11 @@ module Api
       skip_authorization_check
 
       def me
-        render json: current_resource_owner
+        render json: current_resource_owner, serializer: ::V1::UserSerializer
       end
 
       def index
-        render json: users
+        render json: users, each_serializer: ::V1::UserSerializer
       end
 
       private

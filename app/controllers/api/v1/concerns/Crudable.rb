@@ -41,4 +41,14 @@ module Crudable
       render status: :unprocessable_entity, json: false
     end
   end
+
+  private
+
+    def records_serializer
+      "V1::#{controller_name.classify.pluralize}Serializer".constantize
+    end
+
+    def record_serializer
+      "V1::#{controller_name.classify}Serializer".constantize
+    end
 end

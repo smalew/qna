@@ -17,14 +17,6 @@ module Api
           @record ||= Answer.find_by(id: params[:id]) || records.build(record_params)
         end
 
-        def records_serializer
-          AnswersSerializer
-        end
-
-        def record_serializer
-          AnswerSerializer
-        end
-
         def record_params
           params.require(:answer).permit(:body, links_attributes: [:name, :url])
         end
