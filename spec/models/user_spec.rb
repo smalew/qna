@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :bigint           not null, primary key
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  reset_password_token   :string
+#  reset_password_sent_at :datetime
+#  remember_created_at    :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  confirmation_token     :string
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  admin                  :boolean
+#
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -7,6 +24,8 @@ RSpec.describe User, type: :model do
 
     it { should have_many(:rates).dependent(:destroy) }
     it { should have_many(:authorizations).dependent(:destroy) }
+    it { should have_many(:access_grants).dependent(:delete_all) }
+    it { should have_many(:access_tokens).dependent(:delete_all) }
   end
 
   context 'validations' do

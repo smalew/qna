@@ -24,6 +24,10 @@ gem 'gon', '6.3.2'
 gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
 gem 'omniauth-twitter', '1.4.0'
 
+gem 'doorkeeper', '5.4.0'
+gem 'active_model_serializers', '0.10.10'
+gem 'oj', '3.10.15'
+
 gem 'cancancan', '3.1.0'
 
 group :development, :test do
@@ -32,6 +36,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-rails', '~> 4.0.0'
   gem 'factory_bot_rails', '6.0.0'
+  gem 'annotate', '3.1.1'
 end
 
 group :development do
