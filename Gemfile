@@ -30,6 +30,9 @@ gem 'oj', '3.10.15'
 
 gem 'cancancan', '3.1.0'
 
+gem 'sidekiq', '6.1.2'
+gem 'whenever','1,0,0', require: false
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
