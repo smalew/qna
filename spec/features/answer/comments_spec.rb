@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can create comments for answer', %q{
+feature 'User can create comments for answer', "
   In order to ask something about answer
   As a authenticated user
   I'd like to ba able to create comment for answer
-} do
-
+" do
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question) }

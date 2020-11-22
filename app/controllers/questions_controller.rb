@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
@@ -8,8 +10,7 @@ class QuestionsController < ApplicationController
   include Rated
   include Commented
 
-  def index
-  end
+  def index; end
 
   def show
     question.links.build
@@ -80,7 +81,7 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body,
                                      files: [],
-                                     regard_attributes: [:title, :image],
-                                     links_attributes: [:name, :url, :done, :_destroy])
+                                     regard_attributes: %i[title image],
+                                     links_attributes: %i[name url done _destroy])
   end
 end

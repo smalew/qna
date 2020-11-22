@@ -1,16 +1,15 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
   use_doorkeeper
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  #
-  devise_for :users, controllers: {
-    omniauth_callbacks: 'oauth_callbacks',
-    confirmations: 'confirmations' }
+  devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks', confirmations: 'confirmations' }
 
   root 'questions#index'
 
@@ -46,3 +45,4 @@ Rails.application.routes.draw do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

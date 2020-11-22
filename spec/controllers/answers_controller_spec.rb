@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
@@ -127,7 +129,7 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
       let!(:question) { create(:question, user: user) }
 
-      context "and best answer do not exist yet" do
+      context 'and best answer do not exist yet' do
         before { patch :choose_as_best, params: { id: answer, format: :js } }
 
         context 'and answer owner' do
@@ -143,7 +145,7 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
 
-      context "and best answer already exist" do
+      context 'and best answer already exist' do
         let!(:answer) { create(:answer, question: question, best_answer: true) }
         let!(:another_answer) { create(:answer, question: question) }
 

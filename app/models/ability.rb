@@ -29,6 +29,16 @@ class Ability
     can :update, [Question, Answer, Comment, Rate], user_id: user.id
     can :destroy, [Question, Answer, Comment, Rate], user_id: user.id
 
+    links_abilities
+    regard_abilities
+    attachment_abilities
+    rate_abilities
+    comment_abilities
+  end
+
+  private
+
+  def links_abilities
     can :update, Link do |link|
       user.author_of?(link.linkable)
     end
@@ -36,7 +46,9 @@ class Ability
     can :destroy, Link do |link|
       user.author_of?(link.linkable)
     end
+  end
 
+  def regard_abilities
     can :update, Regard do |link|
       user.author_of?(link.question)
     end
@@ -45,26 +57,32 @@ class Ability
       user.author_of?(link.question)
     end
 
-    can :destroy, Link do |link|
-      user.author_of?(link.linkable)
-    end
-
-    can :destroy, ActiveStorage::Attachment do |attachment|
-      user.author_of?(attachment.record)
-    end
-
-    can :rate_up, [Question, Answer] do |record|
-      !user.author_of?(record)
-    end
-    can :rate_down, [Question, Answer] do |record|
-      !user.author_of?(record)
-    end
-    can :cancel_rate, [Question, Answer] do |record|
-      !user.author_of?(record)
-    end
-    can :create_comment, [Question, Answer]
     can :choose_as_best, Answer do |answer|
       user.author_of?(answer.question)
     end
+  end
+
+  def attachment_abilities
+    can :destroy, ActiveStorage::Attachment do |attachment|
+      user.author_of?(attachment.record)
+    end
+  end
+
+  def rate_abilities
+    can :rate_up, [Question, Answer] do |record|
+      !user.author_of?(record)
+    end
+
+    can :rate_down, [Question, Answer] do |record|
+      !user.author_of?(record)
+    end
+
+    can :cancel_rate, [Question, Answer] do |record|
+      !user.author_of?(record)
+    end
+  end
+
+  def comment_abilities
+    can :create_comment, [Question, Answer]
   end
 end

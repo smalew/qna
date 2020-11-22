@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RegardsController, type: :controller do
@@ -5,7 +7,6 @@ RSpec.describe RegardsController, type: :controller do
   let(:question) { create(:question, user: user) }
   let(:answer) { create(:answer, user: user) }
   let!(:regard) { create(:regard, question: question, answer: answer) }
-
 
   describe '#GET index' do
     context 'Login user' do

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can edit answer', %q{
+feature 'User can edit answer', "
   In order to change answer
   As a authenticated user
   I'd like to ba able to edit answer to the question
-} do
+" do
   given!(:question) { create(:question) }
 
   describe 'Authenticated user', js: true do
@@ -91,7 +93,7 @@ feature 'User can edit answer', %q{
               fill_in :new_answer_body, with: 'New Answer body'
               attach_file 'Files', [
                 Rails.root.join('spec', 'rails_helper.rb'),
-                Rails.root.join('spec', 'spec_helper.rb'),
+                Rails.root.join('spec', 'spec_helper.rb')
               ]
 
               click_on I18n.t('answer.form.save_button')
@@ -179,7 +181,7 @@ feature 'User can edit answer', %q{
           end
 
           expect(page).to_not have_link('Link name', href: url)
-          expect(page).to have_content("Links url is invalid")
+          expect(page).to have_content('Links url is invalid')
         end
       end
 

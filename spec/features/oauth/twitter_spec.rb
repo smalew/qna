@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can authorization throw Twitter', %q{
+feature 'User can authorization throw Twitter', "
   In order to login to site
   As a authenticated user
   I'd like to ba able to login throw Twitter account
-} do
-
+" do
   background do
     OmniAuth.config.mock_auth[:twitter] = auth
 

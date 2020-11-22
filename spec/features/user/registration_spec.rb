@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can register', %q{
+feature 'User can register', "
   In order to login and ask question
   As an authenticated user
   I'd like to be able to register
-} do
-
+" do
   describe 'Registered user' do
     given(:user) { create(:user) }
 

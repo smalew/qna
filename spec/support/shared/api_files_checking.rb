@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'API Files checking' do
   let(:files_in_response) { record_response['files'] }
   let(:files_for_checking) do

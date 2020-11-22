@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can choose best answer', %q{
+feature 'User can choose best answer', "
   In order to help community with best answer
   As a authenticated user
   I'd like to ba able to choose best answer
-} do
+" do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
@@ -13,7 +15,7 @@ feature 'User can choose best answer', %q{
     context 'question owner', js: true do
       context 'when only one answer' do
         given(:question) { create(:question, :with_regard, user: user) }
-        given!(:answer) { create(:answer, question: question)}
+        given!(:answer) { create(:answer, question: question) }
 
         scenario 'can choose best answer' do
           visit question_path(question)
@@ -35,7 +37,7 @@ feature 'User can choose best answer', %q{
 
       context 'when only one answer and question without regard' do
         given(:question) { create(:question, user: user) }
-        given!(:answer) { create(:answer, question: question)}
+        given!(:answer) { create(:answer, question: question) }
 
         scenario 'can choose best answer' do
           visit question_path(question)
@@ -52,8 +54,8 @@ feature 'User can choose best answer', %q{
 
       context 'when best answer already exist' do
         given(:question) { create(:question, :with_regard, user: user) }
-        given!(:answer) { create(:answer, question: question, body: 'first answer', best_answer: true)}
-        given!(:another_answer) { create(:answer, question: question, body: 'second answer')}
+        given!(:answer) { create(:answer, question: question, body: 'first answer', best_answer: true) }
+        given!(:another_answer) { create(:answer, question: question, body: 'second answer') }
 
         scenario 'can choose another best answer' do
           visit question_path(question)

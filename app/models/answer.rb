@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: answers
@@ -25,7 +27,7 @@ class Answer < ApplicationRecord
   scope :best, -> { where(best_answer: true) }
   scope :ordered_by_best, -> { order(best_answer: :desc) }
 
-  validates :body, presence: :true
+  validates :body, presence: true
 
   def choose_as_best
     Answer.transaction do

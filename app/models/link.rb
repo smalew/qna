@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: links
@@ -13,7 +15,7 @@
 class Link < ApplicationRecord
   belongs_to :linkable, polymorphic: true
 
-  validates_format_of :url, with: URI.regexp
+  validates_format_of :url, with: URI::DEFAULT_PARSER.make_regexp
 
   def gist?
     URI.parse(url).host.include?('gist')

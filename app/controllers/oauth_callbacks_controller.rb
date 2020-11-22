@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: :github
 
@@ -30,16 +32,16 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-    def authorize_user_by(provider)
-      sign_in_and_redirect user, event: :authentication
-      set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
-    end
+  def authorize_user_by(provider)
+    sign_in_and_redirect user, event: :authentication
+    set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
+  end
 
-    def user
-      @user ||= User.find_for_oauth(oauth_params)
-    end
+  def user
+    @user ||= User.find_for_oauth(oauth_params)
+  end
 
-    def oauth_params
-      request.env['omniauth.auth']
-    end
+  def oauth_params
+    request.env['omniauth.auth']
+  end
 end

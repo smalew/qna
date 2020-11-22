@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'API Comments checking' do
   let(:comments_in_response) { record_response['comments'] }
   let(:comments_for_checking) { comments.map { |record| V1::CommentsSerializer.new(record).as_json.deep_stringify_keys } }

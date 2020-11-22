@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see answer changes in realtime', %q{
+feature 'User can see answer changes in realtime', "
   In order to get information immediately
   I'd like to ba able to get actual information
-} do
+" do
   given(:user) { create(:user) }
   given!(:question) { create(:question) }
   given(:url) { 'https://github.com/smalew/9d8eeda188e2cdc28ca9b0cab4a7847c' }
 
-  context "create", js: true do
+  context 'create', js: true do
     scenario "answer appears on another user's page" do
       Capybara.using_session('user') do
         sign_in(user)
@@ -21,12 +23,11 @@ feature 'User can see answer changes in realtime', %q{
 
       Capybara.using_session('user') do
         within '#new-answer' do
-
           fill_in 'Body', with: 'Answer body'
 
           attach_file 'Files', [
             Rails.root.join('spec', 'rails_helper.rb'),
-            Rails.root.join('spec', 'spec_helper.rb'),
+            Rails.root.join('spec', 'spec_helper.rb')
           ]
 
           within '#new-links' do
@@ -67,7 +68,7 @@ feature 'User can see answer changes in realtime', %q{
     end
   end
 
-  context "create_comments", js: true do
+  context 'create_comments', js: true do
     given!(:answer) { create(:answer, question: question) }
 
     scenario "answer appears on another user's page" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Answers API', type: :request do
@@ -89,7 +91,7 @@ describe 'Answers API', type: :request do
           body: 'Answer body',
           links_attributes: [
             { name: 'Link1', url: 'http://test1.com' },
-            { name: 'Link2', url: 'http://test2.com' },
+            { name: 'Link2', url: 'http://test2.com' }
           ]
         }
       end
@@ -131,7 +133,7 @@ describe 'Answers API', type: :request do
       context 'with valid attributes' do
         let(:record_params) do
           {
-            body: 'Updated answer body',
+            body: 'Updated answer body'
           }
         end
         let(:record_response) { json['answer'] }
@@ -150,11 +152,11 @@ describe 'Answers API', type: :request do
 
       context 'with valid attributes' do
         let(:record_params) do
-          { body: 'Updated Answer body', }
+          { body: 'Updated Answer body' }
         end
 
         include_examples 'API incorrect response'
-        it { expect(record.reload.body).to_not eq('Updated Answer body')}
+        it { expect(record.reload.body).to_not eq('Updated Answer body') }
       end
     end
   end

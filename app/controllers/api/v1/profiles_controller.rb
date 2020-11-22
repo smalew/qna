@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class ProfilesController < BaseController
-
       skip_authorization_check
 
       def me
@@ -14,9 +15,9 @@ module Api
 
       private
 
-        def users
-          @users ||= User.where.not(id: current_resource_owner.id)
-        end
+      def users
+        @users ||= User.where.not(id: current_resource_owner.id)
+      end
     end
   end
 end

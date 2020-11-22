@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see all regards', %q{
+feature 'User can see all regards', "
   In order to see regards from users
   As a authenticated user
   I'd like to ba able to see all questions
-} do
+" do
   given!(:user) { create(:user) }
   given(:question1) { create(:question, user: user) }
   given!(:answer1) { create(:answer, user: user, best_answer: true) }

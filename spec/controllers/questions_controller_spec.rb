@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
@@ -165,4 +167,3 @@ RSpec.describe QuestionsController, type: :controller do
   include_examples 'rated_actions', :question
   include_examples 'commented_actions', :question
 end
-

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see current question', %q{
+feature 'User can see current question', "
   In order to see question from community
   As a authenticated user
   I'd like to ba able to see current question
-} do
+" do
   given!(:question) { create(:question) }
 
   describe 'Authenticated user' do
@@ -21,7 +23,7 @@ feature 'User can see current question', %q{
 
     context 'can see link' do
       context 'if link is gist' do
-        given!(:link) { create(:link, linkable: question,  url: 'https://gist.github.com/user/ca9b0cab4a7847c') }
+        given!(:link) { create(:link, linkable: question, url: 'https://gist.github.com/user/ca9b0cab4a7847c') }
 
         background do
           answer = Struct.new(:answer) do
@@ -44,7 +46,7 @@ feature 'User can see current question', %q{
       end
 
       context 'if link is not gist' do
-        given!(:link) { create(:link, linkable: question,  url: 'https://some.com/') }
+        given!(:link) { create(:link, linkable: question, url: 'https://some.com/') }
 
         scenario 'its url adress' do
           visit question_path(question)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: answers
@@ -15,7 +17,7 @@ FactoryBot.define do
     user
     question
 
-    body { "My body" }
+    body { 'My body' }
     best_answer { false }
 
     trait :empty_body do
@@ -43,7 +45,7 @@ FactoryBot.define do
 
     trait :with_links do
       before :create do |question|
-        create_list(:link, 2,  linkable: question)
+        create_list(:link, 2, linkable: question)
       end
     end
   end

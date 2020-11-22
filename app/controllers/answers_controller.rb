@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
@@ -42,10 +44,8 @@ class AnswersController < ApplicationController
 
     AnswersChannel.broadcast_to(
       "answers_#{question.id}",
-      {
-        answer: answer,
-        template: render_to_string(partial: 'answers/answer', locals: { recourse: answer, current_user: nil })
-      }
+      answer: answer,
+      template: render_to_string(partial: 'answers/answer', locals: { recourse: answer, current_user: nil })
     )
   end
 
@@ -68,6 +68,6 @@ class AnswersController < ApplicationController
   helper_method :answer
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :done, :_destroy])
+    params.require(:answer).permit(:body, files: [], links_attributes: %i[name url done _destroy])
   end
 end

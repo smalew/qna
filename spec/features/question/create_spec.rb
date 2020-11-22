@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can create question', %q{
+feature 'User can create question', "
   In order to get answer from community
   As a authenticated user
   I'd like to ba able to ask the question
-} do
+" do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
@@ -13,7 +15,6 @@ feature 'User can create question', %q{
     background { click_on I18n.t('question.new_button') }
 
     context 'ask question' do
-
       scenario 'with correct params' do
         fill_in 'Title', with: 'Title question'
         fill_in 'Body', with: 'Body question'
@@ -55,7 +56,7 @@ feature 'User can create question', %q{
         fill_in 'Body', with: 'Body question'
         attach_file 'Files', [
           Rails.root.join('spec', 'rails_helper.rb'),
-          Rails.root.join('spec', 'spec_helper.rb'),
+          Rails.root.join('spec', 'spec_helper.rb')
         ]
 
         click_on I18n.t('question.form.create_button')
@@ -125,7 +126,7 @@ feature 'User can create question', %q{
           click_on I18n.t('question.form.create_button')
 
           expect(page).to_not have_link('Link name', href: 'incorrect link')
-          expect(page).to have_content("Links url is invalid")
+          expect(page).to have_content('Links url is invalid')
         end
       end
 
@@ -157,7 +158,7 @@ feature 'User can create question', %q{
 
           click_on I18n.t('question.form.create_button')
 
-          expect(page).to have_content("Regard is invalid")
+          expect(page).to have_content('Regard is invalid')
         end
 
         scenario 'with empty image regard' do
@@ -170,7 +171,7 @@ feature 'User can create question', %q{
 
           click_on I18n.t('question.form.create_button')
 
-          expect(page).to have_content("Regard is invalid")
+          expect(page).to have_content('Regard is invalid')
         end
       end
     end

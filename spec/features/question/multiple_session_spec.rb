@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see question changes in realtime', %q{
+feature 'User can see question changes in realtime', "
   In order to get information immediately
   I'd like to ba able to get actual information
-} do
-
+" do
   given(:user) { create(:user) }
 
-  context "create", js: true do
+  context 'create', js: true do
     scenario "question appears on another user's page" do
       Capybara.using_session('user') do
         sign_in(user)

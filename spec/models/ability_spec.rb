@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-require "cancan/matchers"
+require 'cancan/matchers'
 
 RSpec.describe Ability do
   subject(:ability) { described_class.new(user) }

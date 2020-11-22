@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can edit question', %q{
+feature 'User can edit question', "
   In order to change the question
   As a authenticated user
   I'd like to ba able to edit the question
-} do
+" do
   given!(:question) { create(:question) }
 
   describe 'Authenticated user', js: true do
@@ -127,7 +129,7 @@ feature 'User can edit question', %q{
             click_on I18n.t('question.save_button')
 
             expect(page).to_not have_link('Link name', href: 'incorrect link')
-            expect(page).to have_content("Links url is invalid")
+            expect(page).to have_content('Links url is invalid')
           end
         end
       end

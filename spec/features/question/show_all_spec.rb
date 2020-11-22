@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see all questions', %q{
+feature 'User can see all questions', "
   In order to see questions from community
   As a authenticated user
   I'd like to ba able to see all questions
-} do
+" do
   given!(:questions) { create_list(:question, 5) }
 
   describe 'Authenticated user' do
