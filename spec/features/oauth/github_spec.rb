@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can authorization throw github', %q{
+feature 'User can authorization throw github', "
   In order to login to site
   As a authenticated user
   I'd like to ba able to login throw github account
-} do
-
+" do
   before { OmniAuth.config.mock_auth[:github] = auth }
 
   describe 'Unauthenticated user' do

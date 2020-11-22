@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see all answers for question', %q{
+feature 'User can see all answers for question', "
   In order to see answers for question
   As a authenticated user
   I'd like to ba able to see all answers
-} do
+" do
   given!(:question) { create(:question) }
   given!(:answers) { create_list(:answer, 2, question: question) }
 

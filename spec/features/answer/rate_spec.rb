@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can rate up answer', %q{
+feature 'User can rate up answer', "
   In order to rate answer
   As a authenticated user
   I'd like to ba able to rate the answer
-} do
+" do
   given(:user) { create(:user) }
 
   describe 'Authenticated user', js: true do
@@ -214,7 +216,7 @@ feature 'User can rate up answer', %q{
       end
     end
 
-    context "own answer" do
+    context 'own answer' do
       given(:author) { user }
 
       scenario 'can not rate' do

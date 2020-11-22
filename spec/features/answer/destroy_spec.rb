@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can destroy answer', %q{
+feature 'User can destroy answer', "
   In order to remove answer from community
   As a authenticated user
   I'd like to ba able to destroy answer
-} do
+" do
   describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
     given(:another_user) { create(:user) }

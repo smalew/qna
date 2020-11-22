@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module V1
   class AnswerSerializer < ActiveModel::Serializer
     attributes :id, :body, :best_answer, :user_id

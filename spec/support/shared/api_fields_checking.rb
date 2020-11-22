@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'API fields checking' do |fields|
   it 'returns all public fields' do
     fields.each do |attr|

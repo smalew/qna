@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Crudable
   extend ActiveSupport::Concern
 
@@ -44,11 +46,11 @@ module Crudable
 
   private
 
-    def records_serializer
-      "V1::#{controller_name.classify.pluralize}Serializer".constantize
-    end
+  def records_serializer
+    "V1::#{controller_name.classify.pluralize}Serializer".constantize
+  end
 
-    def record_serializer
-      "V1::#{controller_name.classify}Serializer".constantize
-    end
+  def record_serializer
+    "V1::#{controller_name.classify}Serializer".constantize
+  end
 end

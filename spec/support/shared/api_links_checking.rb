@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'API Links checking' do
   let(:links_in_response) { record_response['links'] }
   let(:links_for_checking) { links.map { |record| V1::LinksSerializer.new(record).as_json.deep_stringify_keys } }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Questions API', type: :request do
@@ -101,7 +103,7 @@ describe 'Questions API', type: :request do
     let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
     let(:method) { :post }
-    let(:api_path) { "/api/v1/questions" }
+    let(:api_path) { '/api/v1/questions' }
 
     before do
       do_request(method, api_path,
@@ -118,7 +120,7 @@ describe 'Questions API', type: :request do
           body: 'Question body',
           links_attributes: [
             { name: 'Link1', url: 'http://test1.com' },
-            { name: 'Link2', url: 'http://test2.com' },
+            { name: 'Link2', url: 'http://test2.com' }
           ]
         }
       end
@@ -134,8 +136,6 @@ describe 'Questions API', type: :request do
       it { expect(links.size).to eq(2) }
       include_examples 'API Links checking'
     end
-
-
   end
 
   describe '#PUT /api/v1/questions/:id' do
@@ -163,7 +163,7 @@ describe 'Questions API', type: :request do
         let(:record_params) do
           {
             title: 'Updated Question title',
-            body: 'Updated Question body',
+            body: 'Updated Question body'
           }
         end
         let(:record_response) { json['question'] }
@@ -184,13 +184,13 @@ describe 'Questions API', type: :request do
         let(:record_params) do
           {
             title: 'Updated Question title',
-            body: 'Updated Question body',
+            body: 'Updated Question body'
           }
         end
 
         include_examples 'API incorrect response'
-        it { expect(record.reload.title).to_not eq('Updated Question title')}
-        it { expect(record.reload.body).to_not eq('Updated Question body')}
+        it { expect(record.reload.title).to_not eq('Updated Question title') }
+        it { expect(record.reload.body).to_not eq('Updated Question body') }
       end
     end
   end

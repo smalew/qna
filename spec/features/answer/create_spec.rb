@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can create answer', %q{
+feature 'User can create answer', "
   In order to make answer
   As a authenticated user
   I'd like to ba able to answer to the question
-} do
+" do
   given!(:question) { create(:question) }
 
   describe 'Authenticated user', js: true do
@@ -56,7 +58,7 @@ feature 'User can create answer', %q{
         fill_in 'Body', with: 'Answer body'
         attach_file 'Files', [
           Rails.root.join('spec', 'rails_helper.rb'),
-          Rails.root.join('spec', 'spec_helper.rb'),
+          Rails.root.join('spec', 'spec_helper.rb')
         ]
 
         click_on I18n.t('answer.form.create_button')
@@ -137,7 +139,7 @@ feature 'User can create answer', %q{
         end
 
         expect(page).to_not have_link('Link name', href: url)
-        expect(page).to have_content("Links url is invalid")
+        expect(page).to have_content('Links url is invalid')
       end
     end
   end

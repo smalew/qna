@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Profiles APLI', type: :request do
@@ -44,8 +46,8 @@ describe 'Profiles APLI', type: :request do
 
       it 'returns all users' do
         expect(json['users'].size).to eq(3)
-        expect(json['users']).
-          to match_array(another_records.map { |record| V1::UserSerializer.new(record).as_json.deep_stringify_keys })
+        expect(json['users'])
+          .to match_array(another_records.map { |record| V1::UserSerializer.new(record).as_json.deep_stringify_keys })
       end
     end
   end

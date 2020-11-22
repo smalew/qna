@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: questions
@@ -47,7 +49,7 @@ FactoryBot.define do
 
     trait :with_links do
       before :create do |question|
-        create_list(:link, 2,  linkable: question)
+        create_list(:link, 2, linkable: question)
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConfirmationsController < Devise::ConfirmationsController
   def create
     if oauth_params.present? && user.save && authorization.save
@@ -9,19 +11,19 @@ class ConfirmationsController < Devise::ConfirmationsController
 
   private
 
-    def user
-      @user ||= User.new(email: resource_params[:email], password: password, password_confirmation: password)
-    end
+  def user
+    @user ||= User.new(email: resource_params[:email], password: password, password_confirmation: password)
+  end
 
-    def authorization
-      @authorization ||= user.authorizations.new(provider: oauth_params['provider'], uid: oauth_params['uid'])
-    end
+  def authorization
+    @authorization ||= user.authorizations.new(provider: oauth_params['provider'], uid: oauth_params['uid'])
+  end
 
-    def password
-      @password ||= Devise.friendly_token[0, 20]
-    end
+  def password
+    @password ||= Devise.friendly_token[0, 20]
+  end
 
-    def oauth_params
-      session['omniauth.auth']
-    end
+  def oauth_params
+    session['omniauth.auth']
+  end
 end

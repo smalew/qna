@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rated
   extend ActiveSupport::Concern
 

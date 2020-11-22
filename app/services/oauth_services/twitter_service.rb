@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OauthServices
   class TwitterService
     attr_reader :uid
@@ -10,8 +12,8 @@ module OauthServices
 
     private
 
-      def authorization
-        @authorization ||= Authorization.where(provider: 'twitter', uid: uid).first
-      end
+    def authorization
+      @authorization ||= Authorization.where(provider: 'twitter', uid: uid).first
+    end
   end
 end
