@@ -164,6 +164,49 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe '#POST subscribe' do
+    before { login(user) }
+    before { post :subscribe, params: { id: question, format: :js } }
+
+    context 'when user is question owner' do
+      let(:question) { create(:question, user: user) }
+
+      it { expect(response.body).to be_truthy }
+    end
+
+    context 'when user is not question owner' do
+      let(:question) { create(:question) }
+
+      it { expect(response.body).to be_truthy }
+    end
+  end
+
+  describe '#DELETE unsubscribe' do
+    before { login(user) }
+    subject { delete :unsubscribe, params: { id: question, format: :js } }
+
+    context 'when user is question owner' do
+      let(:question) { create(:question, user: user) }
+
+      it do
+        subject
+        expect(response.body).to be_truthy
+        expect(question.reload.subscriptions.count).to eq(0)
+      end
+    end
+
+    context 'when user is question owner' do
+      let(:question) { create(:question, user: user) }
+
+      it do
+        subject
+        expect(response.body).to be_truthy
+      end
+
+      it { expect { subject }.to_not change(Subscription, :count) }
+    end
+  end
+
   include_examples 'rated_actions', :question
   include_examples 'commented_actions', :question
 end

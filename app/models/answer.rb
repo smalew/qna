@@ -29,10 +29,20 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :broadcast_subscribers
+
   def choose_as_best
     Answer.transaction do
       question.best_answer&.update!(best_answer: false, regard: nil)
       update!(best_answer: true, regard: question.regard)
+    end
+  end
+
+  private
+
+  def broadcast_subscribers
+    question.subscribers.each do |subscriber|
+      QuestionsUpdateMailer.notify(subscriber, question, self).deliver_later
     end
   end
 end

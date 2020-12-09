@@ -50,6 +50,16 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def subscribe
+    render json: subscription.save
+  end
+
+  def unsubscribe
+    subscription.destroy if can?(:destroy, subscription)
+
+    render json: true
+  end
+
   private
 
   def publish_question
@@ -77,6 +87,12 @@ class QuestionsController < ApplicationController
     @answer ||= question.answers.build
   end
   helper_method :answer
+
+  def subscription
+    @subscription ||= question.subscriptions.find_by(user_id: current_user.id) ||
+                      question.subscriptions.build(user: current_user)
+  end
+  helper_method :subscription
 
   def question_params
     params.require(:question).permit(:title, :body,

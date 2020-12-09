@@ -81,6 +81,15 @@ RSpec.describe Ability do
       it { should_not be_able_to :choose_as_best, another_answer, { question: { user: user } } }
     end
 
+    context 'subscribe' do
+      let(:subscription) { create(:subscription, user: user) }
+      let(:another_subscription) { create(:subscription, user: another_user) }
+
+      it { should be_able_to :create, Subscription }
+      it { should be_able_to :destroy, subscription, user: user }
+      it { should_not be_able_to :destroy, another_subscription, user: user }
+    end
+
     context 'comment' do
       let(:comment) { create(:comment, user: user) }
       let(:another_comment) { create(:comment, user: another_user) }

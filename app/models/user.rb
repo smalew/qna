@@ -39,6 +39,9 @@ class User < ApplicationRecord
            foreign_key: :resource_owner_id,
            dependent: :delete_all
 
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribes, through: :subscriptions, source: :question
+
   def self.find_for_oauth(auth)
     case auth.provider
     when 'github'

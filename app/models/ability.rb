@@ -25,10 +25,11 @@ class Ability
   def user_abilities
     quest_abilities
 
-    can :create, [Question, Answer, Comment, Link, Rate, Regard, ActiveStorage::Attachment]
+    can :create, [Question, Answer, Comment, Link, Rate, Regard, ActiveStorage::Attachment, Subscription]
     can :update, [Question, Answer, Comment, Rate], user_id: user.id
-    can :destroy, [Question, Answer, Comment, Rate], user_id: user.id
+    can :destroy, [Question, Answer, Comment, Rate, Subscription], user_id: user.id
 
+    subscribe_abilities
     links_abilities
     regard_abilities
     attachment_abilities
@@ -37,6 +38,11 @@ class Ability
   end
 
   private
+
+  def subscribe_abilities
+    can(:subscribe, Question)
+    can(:unsubscribe, Question)
+  end
 
   def links_abilities
     can :update, Link do |link|

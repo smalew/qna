@@ -17,6 +17,8 @@ RSpec.describe Question, type: :model do
   context 'associations' do
     it { should have_one(:regard).dependent(:destroy) }
     it { should accept_nested_attributes_for :regard }
+    it { should have_many(:subscriptions).dependent(:destroy) }
+    it { should have_many(:subscribers) }
 
     it_behaves_like 'has_user'
     it_behaves_like 'answerable'
@@ -31,6 +33,13 @@ RSpec.describe Question, type: :model do
   end
 
   context 'methods' do
+    describe 'add_author_to_subscribers' do
+      let!(:user) { create(:user) }
+      let!(:question) { create(:question, user: user) }
+
+      it { expect(question.subscribers.count).to eq(1) }
+      it { expect(question.subscribers).to eq([user]) }
+    end
     describe '#best_answer' do
       let(:question) { create(:question) }
 

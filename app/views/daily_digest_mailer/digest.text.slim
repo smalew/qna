@@ -1,0 +1,10 @@
+' DailyDigest
+
+= "Hello #{@user.email}"
+' Questions for today:
+
+- @questions.each do |question|
+  = question.title
+  = "\r\n"
+  = question.body
+  = "\r\n" * 2

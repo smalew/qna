@@ -87,5 +87,16 @@ RSpec.describe Answer, type: :model do
       it { expect(another_answer.reload.best_answer).to be_falsey }
       it { expect(another_answer.reload.regard).to be_nil }
     end
+
+    context '#broadcast_subscribers' do
+      let(:user) { create(:user) }
+      let(:question) { create(:question, user: user) }
+      let(:answer) { build(:answer, question: question) }
+
+      it 'calls QuestionsUpdateMailer#notify' do
+        expect(QuestionsUpdateMailer).to receive(:notify).with(user, question, answer).and_call_original
+        answer.save
+      end
+    end
   end
 end
