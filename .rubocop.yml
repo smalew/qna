@@ -1,5 +1,6 @@
 AllCops:
   Exclude:
+    - 'db/**/*'
     - 'spec/**/*'
     - 'node_modules/**/*'
 Style/Documentation:

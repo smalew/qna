@@ -34,4 +34,18 @@ $(document).on('turbolinks:load', function () {
 
         $('#question-'+ gon.question_id +' .rate-value:first').html(difference)
     });
+
+    $('#question-'+ gon.question_id +' #subscription').on("click",".subscribe", function (e) {
+        e.preventDefault();
+        $(this).addClass('hidden');
+        $('#question-'+ gon.question_id +' #subscription .subscribe:first').addClass('hidden');
+        $('#question-'+ gon.question_id +' #subscription .unsubscribe:first').removeClass('hidden');
+    });
+
+    $('#question-'+ gon.question_id +' #subscription').on("click",".unsubscribe", function (e) {
+        e.preventDefault();
+        $(this).addClass('hidden');
+        $('#question-'+ gon.question_id +' #subscription .unsubscribe:first').addClass('hidden');
+        $('#question-'+ gon.question_id +' #subscription .subscribe:first').removeClass('hidden');
+    });
 });

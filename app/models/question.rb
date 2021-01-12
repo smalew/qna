@@ -21,12 +21,22 @@ class Question < ApplicationRecord
 
   has_one :regard, dependent: :destroy
   has_many :rates, as: :ratable, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
   accepts_nested_attributes_for :regard, reject_if: :all_blank, allow_destroy: true
 
   validates :title, :body, presence: true
   validates_associated :regard
 
+  before_create :add_author_to_subscribers
+
   def best_answer
     answers.best.first
+  end
+
+  private
+
+  def add_author_to_subscribers
+    subscriptions.build(user: user)
   end
 end

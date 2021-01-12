@@ -1,0 +1,9 @@
+h1 DailyDigest
+p = "Hello #{@user.email}"
+p = 'Questions for today:'
+
+table
+  - @questions.each do |title, body|
+    tr
+      td = title
+      td = body

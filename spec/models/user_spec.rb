@@ -28,6 +28,8 @@ RSpec.describe User, type: :model do
     it { should have_many(:authorizations).dependent(:destroy) }
     it { should have_many(:access_grants).dependent(:delete_all) }
     it { should have_many(:access_tokens).dependent(:delete_all) }
+    it { should have_many(:subscriptions).dependent(:destroy) }
+    it { should have_many(:subscribes) }
   end
 
   context 'validations' do

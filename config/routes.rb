@@ -23,7 +23,14 @@ Rails.application.routes.draw do
     post :create_comment, on: :member
   end
 
-  resources :questions, concerns: %i[ratable commentable], only: %i[index new show create update destroy] do
+  concern :subscritable do
+    post :subscribe, on: :member
+    delete :unsubscribe, on: :member
+  end
+
+  resources :questions,
+            concerns: %i[ratable commentable subscritable],
+            only: %i[index new show create update destroy] do
     resources :answers, concerns: %i[ratable commentable], shallow: true, only: %i[create update destroy] do
       patch :choose_as_best, on: :member
     end
