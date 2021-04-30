@@ -16,7 +16,7 @@ gem 'webpacker', '~> 4.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'cocoon'
 gem 'devise', '4.7.2'
-gem 'gon', '6.3.2'
+gem 'gon', '6.4.0'
 gem 'google-cloud-storage'
 gem 'octokit', '~> 4.0'
 gem 'redis', '4.2.1'
